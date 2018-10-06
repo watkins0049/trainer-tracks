@@ -1,0 +1,14 @@
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\bin\Debug\netcoreapp2.1\TrainerTracks.deps.json
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\bin\Debug\netcoreapp2.1\TrainerTracks.runtimeconfig.json
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\bin\Debug\netcoreapp2.1\TrainerTracks.runtimeconfig.dev.json
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\bin\Debug\netcoreapp2.1\TrainerTracks.dll
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\bin\Debug\netcoreapp2.1\TrainerTracks.pdb
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.csprojAssemblyReference.cache
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.csproj.CoreCompileInputs.cache
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.RazorAssemblyInfo.cache
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.RazorAssemblyInfo.cs
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.AssemblyInfoInputs.cache
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.AssemblyInfo.cs
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.RazorTargetAssemblyInfo.cache
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.dll
+C:\Users\nick\Google Drive\Coding\trainer-tracks\server\TrainerTracks\obj\Debug\netcoreapp2.1\TrainerTracks.pdb
