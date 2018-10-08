@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using TrainerTracks.Data.Context;
+using TrainerTracks.Data.Model;
 
 namespace TrainerTracks.Controllers
 {
@@ -10,11 +10,26 @@ namespace TrainerTracks.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly IOptions<TrainerTracksConfig> config;
+        private readonly TrainerTracksContext context;
+
+        public ValuesController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        {
+            this.config = config;
+            this.context = context;
+        }
 
         [HttpGet("HelloWorld")]
         public IEnumerable<string> HelloWorld()
         {
             return new string[] { "Hello World!" };
+        }
+
+        [HttpGet("Test")]
+        public Trainer Test()
+        {
+            Trainer conn = context.Trainer.Find("email_address_here");
+            return conn;
         }
     }
 }
