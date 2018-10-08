@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Protocols;
-using System.Configuration;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using TrainerTracks.Data.Context;
+using TrainerTracks.Data.Model;
 
 namespace TrainerTracks.Controllers
 {
@@ -13,21 +10,14 @@ namespace TrainerTracks.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
-
         private readonly IOptions<TrainerTracksConfig> config;
+        private readonly TrainerTracksContext context;
 
-        public ValuesController(IOptions<TrainerTracksConfig> config)
+        public ValuesController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
         {
             this.config = config;
+            this.context = context;
         }
-
-        // GET: /<controller>/
-        //public IActionResult Index() => View(config.Value);
-
-        //private IActionResult View(MyConfig value)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         [HttpGet("HelloWorld")]
         public IEnumerable<string> HelloWorld()
@@ -35,11 +25,10 @@ namespace TrainerTracks.Controllers
             return new string[] { "Hello World!" };
         }
 
-        [HttpGet("DbConnection")]
-        public string DbConnection()
+        [HttpGet("Test")]
+        public Trainer Test()
         {
-
-            var conn = config.Value.ConnectionString;
+            Trainer conn = context.Trainer.Find("email_address_here");
             return conn;
         }
     }
