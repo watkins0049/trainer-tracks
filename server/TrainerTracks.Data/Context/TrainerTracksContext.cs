@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using TrainerTracks.Data.Model;
+using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Data.Context
 {

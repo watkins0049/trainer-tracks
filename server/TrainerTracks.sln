@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.28010.2041
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainerTracks", "TrainerTracks\TrainerTracks.csproj", "{63B48191-2999-4037-AE5E-C0F829642A33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainerTracks.Data", "TrainerTracks.Data\TrainerTracks.Data.csproj", "{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainerTracks.Data", "TrainerTracks.Data\TrainerTracks.Data.csproj", "{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
