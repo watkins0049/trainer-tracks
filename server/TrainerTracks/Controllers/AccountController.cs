@@ -1,34 +1,29 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System.Collections.Generic;
+using System.Linq;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
+using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
         private readonly TrainerTracksContext context;
 
-        public ValuesController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        public AccountController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
         {
             this.config = config;
             this.context = context;
         }
 
-        [HttpGet("HelloWorld")]
-        public IEnumerable<string> HelloWorld()
-        {
-            return new string[] { "Hello World!" };
-        }
-
         [HttpGet("Test")]
-        public Trainer Test()
+        public Trainer Test(string emailAddress)
         {
-            Trainer conn = context.Trainer.Find("email_address_here");
+            Trainer conn = context.Trainer.Where(t => t.EmailAddress.Equals(emailAddress)).FirstOrDefault();
             return conn;
         }
     }
