@@ -20,8 +20,9 @@ namespace TrainerTracks.Controllers
             this.context = context;
         }
 
-        [HttpGet("Test")]
-        public Trainer Test(string emailAddress)
+        
+        [HttpGet("login")]
+        public Trainer Login(string emailAddress)
         {
             Trainer conn = context.Trainer.Where(t => t.EmailAddress.Equals(emailAddress)).FirstOrDefault();
             return conn;

@@ -1,4 +1,10 @@
 import { Component } from '@angular/core';
+import { Http } from "@angular/http";
+import { User } from '../model/user';
+import { map } from 'rxjs/operators';
+
+// import { Observable } from 'rxjs/Observable';
+// import 'rxjs/add/operator/map';
 
 @Component({
     selector: 'app-root',
@@ -6,5 +12,19 @@ import { Component } from '@angular/core';
     styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-    title = 'client';
+
+    public user = new User();
+
+    constructor(private http: Http) {
+
+    }
+
+    public login(): void {
+
+        this.http.get('/api/account/login?emailAddress=' + this.user.email).subscribe(res => {
+            console.log(res.json());
+        });
+
+    }
+
 }
