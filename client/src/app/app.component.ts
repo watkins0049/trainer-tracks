@@ -21,9 +21,10 @@ export class AppComponent {
 
     public login(): void {
 
-        this.http.get('/api/account/login?emailAddress=' + this.user.email).subscribe(res => {
-            console.log(res.json());
-        });
+        this.http.post('/api/account/login', { emailAddress: this.user.email, password: this.user.password })
+            .subscribe(res => {
+                console.log(res.json());
+            });
 
     }
 
