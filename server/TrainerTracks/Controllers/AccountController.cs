@@ -1,11 +1,13 @@
 ﻿using BCrypt.Net;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Linq;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO;
 using TrainerTracks.Data.Model.Entity;
+using TrainerTracks.Security;
 
 namespace TrainerTracks.Controllers
 {
@@ -26,11 +28,12 @@ namespace TrainerTracks.Controllers
         [HttpPost("login")]
         public Trainer Login(UserDTO user)
         {
-            var salt = BCrypt.Net.BCrypt.GenerateSalt();
-            var hash = BCrypt.Net.BCrypt.HashPassword(user.password, salt);
-            
-            Trainer conn = context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).FirstOrDefault();
-            return conn;
+            var parameters = new Npgsql.NpgsqlParameter[] { new Npgsql.NpgsqlParameter { Value = user.emailAddress } };
+            var test = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", parameters);
+
+            var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, test.Password);
+
+            return null;
         }
     }
 }

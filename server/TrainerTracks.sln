@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainerTracks", "TrainerTra
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TrainerTracks.Data", "TrainerTracks.Data\TrainerTracks.Data.csproj", "{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainerTracks.Security", "TrainerTracks.Security\TrainerTracks.Security.csproj", "{ACC60999-6B3E-4EDE-AF8C-FE1657086899}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4429EB23-D1FC-40CF-8300-2A0BC6FAD27E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACC60999-6B3E-4EDE-AF8C-FE1657086899}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACC60999-6B3E-4EDE-AF8C-FE1657086899}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACC60999-6B3E-4EDE-AF8C-FE1657086899}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACC60999-6B3E-4EDE-AF8C-FE1657086899}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

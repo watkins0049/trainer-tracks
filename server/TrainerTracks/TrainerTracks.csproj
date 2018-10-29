@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TrainerTracks.Data\TrainerTracks.Data.csproj" />
+    <ProjectReference Include="..\TrainerTracks.Security\TrainerTracks.Security.csproj" />
   </ItemGroup>
 
 </Project>
