@@ -7,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TrainerTracks.Data.Model.DTO;
 using TrainerTracks.Data.Model.Entity;
@@ -16,7 +17,7 @@ namespace TrainerTracks.Services
     public class AccountServices
     {
 
-        public static List<Claim> SetupClaimsAsync(Trainer user)
+        public static List<Claim> SetupClaims(Trainer user)
         {
             List<Claim> result = new List<Claim>();
 
@@ -27,7 +28,7 @@ namespace TrainerTracks.Services
             return result;
         }
 
-        public static SecurityToken GenerateSecurityToken(List<Claim> claims)
+        public static String GenerateSecurityToken(List<Claim> claims)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
             ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
@@ -41,14 +42,13 @@ namespace TrainerTracks.Services
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return token;
-        }
 
-        //private void CreateSession(ClaimsPrincipal transformedPrincipal)
-        //{
-        //    SessionSecurityToken sessionSecurityToken = new SessionSecurityToken(transformedPrincipal, TimeSpan.FromHours(8));
-        //    FederatedAuthentication.SessionAuthenticationModule.WriteSessionTokenToCookie(sessionSecurityToken);
-        //}
+            var test = tokenHandler.WriteToken(token);
+
+            Thread.CurrentPrincipal = principal;
+
+            return test;
+        }
 
     }
 }

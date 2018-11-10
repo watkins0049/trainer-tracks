@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
 using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO;
@@ -17,7 +13,7 @@ namespace TrainerTracks.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
@@ -30,9 +26,9 @@ namespace TrainerTracks.Controllers
             this.context = context;
         }
 
-
+        [AllowAnonymous]
         [HttpPost("login")]
-        public SecurityToken Login(UserDTO user)
+        public UserClaimsDTO Login(UserDTO user)
         {
             var userCredentials = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", user.emailAddress);
 
@@ -49,11 +45,23 @@ namespace TrainerTracks.Controllers
             }
 
             var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
-            var claims = AccountServices.SetupClaimsAsync(trainer);
 
+            var claims = AccountServices.SetupClaims(trainer);
             var token = AccountServices.GenerateSecurityToken(claims);
 
-            return token;
+            UserClaimsDTO claimsDto = new UserClaimsDTO()
+            {
+                Claims = claims,
+                Token = token
+            };
+
+            return claimsDto;
+        }
+        
+        [HttpGet("test")]
+        public string Test()
+        {
+            return "test";
         }
     }
 }

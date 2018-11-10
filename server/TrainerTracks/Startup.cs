@@ -37,13 +37,7 @@ namespace TrainerTracks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
-            //services.AddAuthentication().AddCookie("Cookies");
-
-            //services.AddAuthorization(options =>
-            //{
-            //    options.AddPolicy("EmployeeOnly", policy => policy.RequireClaim("EmployeeNumber"));
-            //});
+            #region JWT setup
 
             var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
             services.AddAuthentication(x =>
@@ -64,23 +58,27 @@ namespace TrainerTracks
                 };
             });
 
-            #region controller setup
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            #endregion controller setup
+            #endregion JWT setup
 
-            #region config file setup
+            #region Controller setup
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            #endregion Controller setup
+
+            #region Config file setup
+
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             // Add our Config object so it can be injected. Reads from the TrainerTracksConfig section of the appsettings.json file.
             services.Configure<TrainerTracksConfig>(Configuration.GetSection("TrainerTracksConfig"));
-            #endregion config file setup
+
+            #endregion Config file setup
 
             #region DB context setup
 
             var connection = Configuration.GetConnectionString("TrainerTracks");
             services.AddDbContext<TrainerTracksContext>(options => options.UseNpgsql(connection));
-
-            //services.AddScoped<IDataAccessProvider, DataAccessPostgreSqlProvider.DataAccessPostgreSqlProvider>();
 
             #endregion DB context setup
         }
@@ -97,11 +95,20 @@ namespace TrainerTracks
                 app.UseHsts();
             }
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            
             app.UseHttpsRedirection();
-            app.UseMvc();
-
             app.UseCookiePolicy();
+
+            // Make sure UseAuthentication comes before UseMvc to ensure authentication occurs properly.
+            // See: https://stackoverflow.com/questions/48720518/asp-net-core-2-401-error-with-bearer-token
             app.UseAuthentication();
+            app.UseMvc();
         }
     }
 }

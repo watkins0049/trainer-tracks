@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { Http } from "@angular/http";
+import { Http, Headers } from "@angular/http";
 import { User } from '../model/user';
-import { map } from 'rxjs/operators';
 
 // import { Observable } from 'rxjs/Observable';
 // import 'rxjs/add/operator/map';
@@ -23,9 +22,25 @@ export class AppComponent {
 
         this.http.post('/api/account/login', { emailAddress: this.user.email, password: this.user.password })
             .subscribe(res => {
-                console.log(res.json());
+                let json = res.json();
+                localStorage.setItem('TrainerTracksCookie', json['token']);
+
+
+                this.test();
             });
 
+    }
+
+    private test(): void {
+        const token = localStorage.getItem('TrainerTracksCookie');
+
+        let headers = new Headers();
+        headers.append('Authorization', 'Bearer ' + token);
+
+        this.http.get('/api/account/test', { headers: headers })
+            .subscribe(res => {
+                console.log(res);
+            });
     }
 
 }
