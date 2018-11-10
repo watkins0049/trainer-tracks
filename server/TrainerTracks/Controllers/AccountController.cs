@@ -1,22 +1,28 @@
-﻿using BCrypt.Net;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO;
-using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Security;
+using TrainerTracks.Services;
 
 namespace TrainerTracks.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [AllowAnonymous]
     public class AccountController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
         private readonly TrainerTracksContext context;
+        private readonly string INVALID_CREDENTIALS_ERROR_MESSAGE = "Email address or password is incorrect.";
 
         public AccountController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
         {
@@ -26,14 +32,28 @@ namespace TrainerTracks.Controllers
 
 
         [HttpPost("login")]
-        public Trainer Login(UserDTO user)
+        public SecurityToken Login(UserDTO user)
         {
-            var parameters = new Npgsql.NpgsqlParameter[] { new Npgsql.NpgsqlParameter { Value = user.emailAddress } };
-            var test = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", parameters);
+            var userCredentials = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", user.emailAddress);
 
-            var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, test.Password);
+            if (userCredentials == null || userCredentials.Salt == null || userCredentials.Password == null)
+            {
+                throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
+            }
 
-            return null;
+            var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, userCredentials.Password);
+
+            if (!pwTest)
+            {
+                throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
+            }
+
+            var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
+            var claims = AccountServices.SetupClaimsAsync(trainer);
+
+            var token = AccountServices.GenerateSecurityToken(claims);
+
+            return token;
         }
     }
 }

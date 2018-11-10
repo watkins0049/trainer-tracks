@@ -1,6 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Data.Context
@@ -16,13 +19,11 @@ namespace TrainerTracks.Data.Context
             //Configure default schema
             modelBuilder.HasDefaultSchema("tt");
         }
-
-
-
+        
         public DbSet<Trainer> Trainer { get; set; }
 
 
-        public T ExecuteProcedure<T>(string procedureName, Npgsql.NpgsqlParameter[] parameters) where T : new()
+        public T ExecuteProcedure<T>(string procedureName, params object[] parameters) where T : new()
         {
             T res = new T();
 
@@ -33,7 +34,7 @@ namespace TrainerTracks.Data.Context
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.CommandText = string.Format("tt.\"{0}\"", procedureName);
-                    command.Parameters.AddRange(parameters);
+                    command.Parameters.AddRange(this.GenerateParameters(parameters));
                     
                     using (var reader = command.ExecuteReader())
                     {
@@ -62,6 +63,18 @@ namespace TrainerTracks.Data.Context
             }
             
             return res;
+        }
+
+        private NpgsqlParameter[] GenerateParameters(object[] parameters)
+        {
+            IList<NpgsqlParameter> postgreSqlParams = new List<NpgsqlParameter>();
+
+            foreach(var parameter in parameters)
+            {
+                postgreSqlParams.Add(new NpgsqlParameter() { Value = parameter });
+            }
+
+            return postgreSqlParams.ToArray();
         }
 
     }
