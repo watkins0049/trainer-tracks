@@ -14,3 +14,6 @@ GRANT USAGE ON SCHEMA tt TO tt_app_role;
   
 -- Table grants
 GRANT SELECT ON TABLE tt."Trainer" TO tt_app_role;
+
+-- Procedure/function grants
+GRANT EXECUTE ON FUNCTION tt."GetUserLoginCredentials" TO tt_app_role;

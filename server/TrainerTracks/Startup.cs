@@ -1,9 +1,14 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Text;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 
@@ -32,23 +37,49 @@ namespace TrainerTracks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            #region controller setup
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
-            #endregion controller setup
+            #region JWT setup
 
-            #region config file setup
+            var jwtKey = this.Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
+            var key = Encoding.ASCII.GetBytes(jwtKey);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
+            #endregion JWT setup
+
+            #region Controller setup
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            #endregion Controller setup
+
+            #region Config file setup
+
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             // Add our Config object so it can be injected. Reads from the TrainerTracksConfig section of the appsettings.json file.
-            services.Configure<TrainerTracksConfig>(Configuration.GetSection("TrainerTracksConfig"));
-            #endregion config file setup
+            services.Configure<TrainerTracksConfig>(this.Configuration.GetSection("TrainerTracksConfig"));
+
+            #endregion Config file setup
 
             #region DB context setup
 
             var connection = Configuration.GetConnectionString("TrainerTracks");
             services.AddDbContext<TrainerTracksContext>(options => options.UseNpgsql(connection));
-
-            //services.AddScoped<IDataAccessProvider, DataAccessPostgreSqlProvider.DataAccessPostgreSqlProvider>();
 
             #endregion DB context setup
         }
@@ -65,7 +96,19 @@ namespace TrainerTracks
                 app.UseHsts();
             }
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials());
+            
             app.UseHttpsRedirection();
+            app.UseCookiePolicy();
+
+            // Make sure UseAuthentication comes before UseMvc to ensure authentication occurs properly.
+            // See: https://stackoverflow.com/questions/48720518/asp-net-core-2-401-error-with-bearer-token
+            app.UseAuthentication();
             app.UseMvc();
         }
     }
