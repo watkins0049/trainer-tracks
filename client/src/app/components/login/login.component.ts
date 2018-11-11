@@ -5,11 +5,11 @@ import { User } from 'app/model/user';
 import { HttpClient } from 'app/utilities/http/http.client';
 
 @Component({
-    selector: 'app-root',
-    templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    selector: 'login',
+    templateUrl: './login.component.html',
+    // styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class LoginComponent {
 
     public user = new User();
 

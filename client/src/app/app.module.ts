@@ -6,13 +6,19 @@ import { HttpModule } from '@angular/http';
 import { HttpClient } from 'app/utilities/http/http.client';
 
 import { AppComponent } from './app.component';
+import { AppRoutingModule } from 'app/components/component.routing.module';
+import { HomeComponent } from 'app/components/home/home.component';
+import { LoginComponent } from 'app/components/login/login.component';
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        HomeComponent,
+        LoginComponent
     ],
     imports: [
-        BrowserModule, FormsModule, HttpModule
+        BrowserModule, FormsModule, HttpModule,
+        AppRoutingModule
     ],
     providers: [
         HttpClient
