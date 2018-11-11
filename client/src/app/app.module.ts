@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
-import { HttpClient } from './http/http.client';
+import { HttpClient } from 'app/utilities/http/http.client';
 
 import { AppComponent } from './app.component';
 
