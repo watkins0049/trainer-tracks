@@ -47,7 +47,7 @@ namespace TrainerTracks.Controllers
             var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
 
             var claims = AccountServices.SetupClaims(trainer);
-            var token = AccountServices.GenerateSecurityToken(claims);
+            var token = AccountServices.GenerateSecurityToken(claims, this.config.Value.JwtKey);
 
             UserClaimsDTO claimsDto = new UserClaimsDTO()
             {
@@ -56,12 +56,6 @@ namespace TrainerTracks.Controllers
             };
 
             return claimsDto;
-        }
-        
-        [HttpGet("test")]
-        public string Test()
-        {
-            return "test";
         }
     }
 }

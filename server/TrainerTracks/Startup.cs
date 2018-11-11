@@ -39,7 +39,8 @@ namespace TrainerTracks
         {
             #region JWT setup
 
-            var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
+            var jwtKey = this.Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
+            var key = Encoding.ASCII.GetBytes(jwtKey);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -71,7 +72,7 @@ namespace TrainerTracks
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             // Add our Config object so it can be injected. Reads from the TrainerTracksConfig section of the appsettings.json file.
-            services.Configure<TrainerTracksConfig>(Configuration.GetSection("TrainerTracksConfig"));
+            services.Configure<TrainerTracksConfig>(this.Configuration.GetSection("TrainerTracksConfig"));
 
             #endregion Config file setup
 

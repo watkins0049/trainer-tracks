@@ -24,9 +24,6 @@ export class AppComponent {
             .subscribe(res => {
                 let json = res.json();
                 localStorage.setItem('TrainerTracksCookie', json['token']);
-
-
-                this.test();
             });
 
     }

@@ -1,15 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using TrainerTracks.Data.Model.DTO;
+using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Services
@@ -28,13 +27,13 @@ namespace TrainerTracks.Services
             return result;
         }
 
-        public static String GenerateSecurityToken(List<Claim> claims)
+        public static string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
             ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("this is my custom Secret key for authnetication");
+            var key = Encoding.ASCII.GetBytes(jwtEncoding);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
@@ -43,11 +42,9 @@ namespace TrainerTracks.Services
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var test = tokenHandler.WriteToken(token);
+            var tokenString = tokenHandler.WriteToken(token);
 
-            Thread.CurrentPrincipal = principal;
-
-            return test;
+            return tokenString;
         }
 
     }
