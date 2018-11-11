@@ -9,6 +9,10 @@ body {
     margin: 0 auto;
 }
 
-.form-signin-heading{
+.form-signin-heading {
     text-align: center;
+}
+
+a {
+    cursor: pointer !important;
 }

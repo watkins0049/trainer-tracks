@@ -7,14 +7,16 @@ import { HttpClient } from 'app/utilities/http/http.client';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from 'app/components/component.routing.module';
-import { HomeComponent } from 'app/components/home/home.component';
+import { TrainerMenuComponent } from 'app/components/trainerMenu/trainer-menu.component';
 import { LoginComponent } from 'app/components/login/login.component';
+import { ClientComponent } from 'app/components/client/client.component';
 
 @NgModule({
     declarations: [
         AppComponent,
-        HomeComponent,
-        LoginComponent
+        TrainerMenuComponent,
+        LoginComponent,
+        ClientComponent
     ],
     imports: [
         BrowserModule, FormsModule, HttpModule,

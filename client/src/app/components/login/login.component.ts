@@ -24,7 +24,7 @@ export class LoginComponent {
             .subscribe(res => {
                 let json = res.json();
                 localStorage.setItem('TrainerTracksCookie', json['token']);
-                this.router.navigateByUrl('/home');
+                this.router.navigateByUrl('/trainer');
             });
     }
 
