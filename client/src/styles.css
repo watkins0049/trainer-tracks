@@ -16,3 +16,7 @@ body {
 a {
     cursor: pointer !important;
 }
+
+#main-page {
+    margin-top: 20px;
+}

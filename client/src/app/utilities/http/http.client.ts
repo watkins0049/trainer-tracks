@@ -15,10 +15,18 @@ export class HttpClient {
         return `/api/${apiUri}`;
     }
 
-    public get(url: string) {
+    public get(url: string, queryParameters?: object) {
+
         let headers = new Headers();
         this.createAuthorizationHeader(headers);
-        return this.http.get(this.generateUri(url), {
+
+        // Straight lifted from https://stackoverflow.com/questions/41761523/how-to-convert-json-to-query-string-in-angular2
+        let params = new URLSearchParams();
+        for (let key in queryParameters) {
+            params.set(key, queryParameters[key])
+        }
+
+        return this.http.get(`${this.generateUri(url)}?${params.toString()}`, {
             headers: headers
         });
     }

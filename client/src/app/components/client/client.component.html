@@ -1,3 +1,14 @@
-<div>
-    Inside the client component!
-</div>
+<h2>Client Search</h2>
+
+<form [formGroup]="searchForm" class="row">
+    <input class="col-md-2 form-control m-1" formControlName="firstName" placeholder="First Name..." />
+    <input class="col-md-2 form-control m-1" formControlName="lastName" placeholder="Last Name..." />
+    <button class="btn btn-primary btn-sm m-1" (click)="searchClients()">Search</button>
+</form>
+
+<table class="table">
+    <thead>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+    </thead>
+</table>

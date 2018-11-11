@@ -21,6 +21,7 @@ namespace TrainerTracks.Data.Context
         }
         
         public DbSet<Trainer> Trainer { get; set; }
+        public DbSet<Client> Client { get; set; }
 
 
         public T ExecuteProcedure<T>(string procedureName, params object[] parameters) where T : new()

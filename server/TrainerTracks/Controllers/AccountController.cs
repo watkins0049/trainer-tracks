@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
-using TrainerTracks.Data.Model.DTO;
+using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Security;
 using TrainerTracks.Services;
 
