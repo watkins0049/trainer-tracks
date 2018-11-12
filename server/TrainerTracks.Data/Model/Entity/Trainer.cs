@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace TrainerTracks.Data.Model.Entity
@@ -12,5 +13,7 @@ namespace TrainerTracks.Data.Model.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
+
+        //public List<TrainerClients> TrainerClients { get; set; }
     }
 }

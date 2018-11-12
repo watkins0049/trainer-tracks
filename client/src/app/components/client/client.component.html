@@ -14,8 +14,8 @@
         </thead>
         <tbody *ngIf="clients.length">
             <tr class="pointer" *ngFor="let client of clients">
-                <td>{{ client.firstName }}</td>
-                <td>{{ client.lastName }}</td>
+                <td>{{ client.client.firstName }}</td>
+                <td>{{ client.client.lastName }}</td>
             </tr>
         </tbody>
         <tbody *ngIf="!clients.length">

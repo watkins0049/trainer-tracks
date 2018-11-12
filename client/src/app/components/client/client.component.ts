@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { HttpClient } from 'app/utilities/http/http.client';
-import { Client } from 'app/model/client';
+// import { Client } from 'app/model/client';
+import { TrainerClient } from 'app/model/trainerClient';
 
 @Component({
     selector: 'client',
@@ -11,7 +12,7 @@ import { Client } from 'app/model/client';
 export class ClientComponent implements OnInit {
 
     public searchForm: FormGroup;
-    public clients = new Array<Client>();
+    public clients = new Array<TrainerClient>();
     public isLoading: boolean;
 
     constructor(

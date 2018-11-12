@@ -1,8 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
+using System.Threading;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.Entity;
@@ -24,11 +28,17 @@ namespace TrainerTracks.Controllers
         }
 
         [HttpGet("searchClients")]
-        public IEnumerable<Client> SearchClients(string firstName, string lastName)
+        public IEnumerable<TrainerClients> SearchClients(string firstName, string lastName)
         {
-            var results = this.context.Client.AsEnumerable()
-                .Where(c => (firstName == null ||c.FirstName.ToUpper().Contains(firstName.ToUpper())) &&
-                    (lastName == null || c.LastName.ToUpper().Contains(lastName.ToUpper())));
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            var trainerId = identity.FindFirst("TrainerId").Value;
+
+            var results = this.context.TrainerClients
+                .Include(tc => tc.Client)
+                .AsEnumerable()
+                .Where(c => (firstName == null || c.Client.FirstName.ToUpper().Contains(firstName.ToUpper())) &&
+                    (lastName == null || c.Client.LastName.ToUpper().Contains(lastName.ToUpper())) &&
+                    c.TrainerId.Equals(Convert.ToInt64(trainerId)));
 
             return results;
         }

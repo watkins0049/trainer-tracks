@@ -18,6 +18,7 @@ namespace TrainerTracks.Services
             result.Add(new Claim(ClaimTypes.Email, user.EmailAddress));
             result.Add(new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName));
             result.Add(new Claim(ClaimTypes.Role, "Trainer"));
+            result.Add(new Claim("TrainerId", user.TrainerId.ToString()));
 
             return result;
         }

@@ -18,11 +18,21 @@ namespace TrainerTracks.Data.Context
         {
             //Configure default schema
             modelBuilder.HasDefaultSchema("tt");
+
+            //modelBuilder.Entity<TrainerClients>()
+            //    .HasOne(p => p.Client)
+            //    .WithMany(b => b.TrainerClients)
+            //    .HasForeignKey(p => p.ClientId);
+
+            //modelBuilder.Entity<TrainerClients>()
+            //    .HasOne(p => p.Trainer)
+            //    .WithMany(b => b.TrainerClients)
+            //    .HasForeignKey(p => p.TrainerId);
         }
         
         public DbSet<Trainer> Trainer { get; set; }
         public DbSet<Client> Client { get; set; }
-
+        public DbSet<TrainerClients> TrainerClients { get; set; }
 
         public T ExecuteProcedure<T>(string procedureName, params object[] parameters) where T : new()
         {
