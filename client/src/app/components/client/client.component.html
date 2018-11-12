@@ -6,9 +6,41 @@
     <button class="btn btn-primary btn-sm m-1" (click)="searchClients()">Search</button>
 </form>
 
-<table class="table">
-    <thead>
-        <th scope="col">First Name</th>
-        <th scope="col">Last Name</th>
-    </thead>
-</table>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+        </thead>
+        <tbody *ngIf="clients.length">
+            <tr class="pointer" *ngFor="let client of clients">
+                <td>{{ client.firstName }}</td>
+                <td>{{ client.lastName }}</td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="!clients.length">
+            <tr>
+                <td colspan="2">No clients found</td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="isLoading">
+            <tr>
+                <td colspan="2" class="text-center">
+                    <div class="align-middle">
+                        <div class="lds-roller">
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                            <div></div>
+                        </div>
+                        <span>Loading clients</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

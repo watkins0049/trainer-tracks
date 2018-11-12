@@ -22,12 +22,13 @@ namespace TrainerTracks.Controllers
             this.config = config;
             this.context = context;
         }
-        
+
         [HttpGet("searchClients")]
         public IEnumerable<Client> SearchClients(string firstName, string lastName)
         {
-
-            var results = this.context.Client.AsEnumerable();
+            var results = this.context.Client.AsEnumerable()
+                .Where(c => (firstName == null ||c.FirstName.ToUpper().Contains(firstName.ToUpper())) &&
+                    (lastName == null || c.LastName.ToUpper().Contains(lastName.ToUpper())));
 
             return results;
         }
