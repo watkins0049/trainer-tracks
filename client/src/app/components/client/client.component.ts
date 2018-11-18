@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { HttpClient } from 'app/utilities/http/http.client';
-// import { Client } from 'app/model/client';
 import { TrainerClient } from 'app/model/trainerClient';
 
 @Component({
@@ -46,8 +45,6 @@ export class ClientComponent implements OnInit {
     }
 
     public navigateToClientDetails(clientId: number): void {
-        let breakpoint = 'here';
-        // /${component}
         this.router.navigateByUrl(`trainer/client/${clientId}`);
     }
 

@@ -1,51 +1,59 @@
 <div class="p-1">
-    <button class="btn btn-success" (click)="saveClient()">Save</button>
+    <button class="btn btn-basic" (click)="navigateBack()">Back</button>
+    <button class="btn btn-success" (click)="saveClient()" [disabled]="isSaving">Save</button>
 </div>
-<div class="row align-items-center p-1">
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="first-name">First Name</label>
-    </div>
-    <div class="col-md-2">
-        <input class="form-control" id="first-name" type="text" placeholder="First Name..." [(ngModel)]="client.firstName" />
-    </div>
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="last-name">Last Name</label>
-    </div>
-    <div class="col-md-2">
-        <input class="form-control" id="last-name" type="text" placeholder="Last Name..." [(ngModel)]="client.lastName" />
-    </div>
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="sex">Sex</label>
-    </div>
-    <div class="col-md-2">
-        <input class="form-control" id="sex" type="text" placeholder="Sex..." [(ngModel)]="client.sex" />
-    </div>
+
+<div *ngIf="isLoading">
+    <loading></loading>
 </div>
-<div class="row align-items-center p-1">
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="email-address">Email Address</label>
+
+<ng-container *ngIf="!isLoading">
+    <div class="row align-items-center p-1">
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="first-name">First Name</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="first-name" type="text" placeholder="First Name..." [(ngModel)]="client.firstName" />
+        </div>
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="last-name">Last Name</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="last-name" type="text" placeholder="Last Name..." [(ngModel)]="client.lastName" />
+        </div>
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="sex">Sex</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="sex" type="text" placeholder="Sex..." [(ngModel)]="client.sex" />
+        </div>
     </div>
-    <div class="col-md-6">
-        <input class="form-control" id="email-address" type="text" placeholder="E-mail Address..." [(ngModel)]="client.emailAddress" />
+    <div class="row align-items-center p-1">
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="email-address">Email Address</label>
+        </div>
+        <div class="col-md-6">
+            <input class="form-control" id="email-address" type="text" placeholder="E-mail Address..." [(ngModel)]="client.emailAddress" />
+        </div>
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="phone-number">Phone Number</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="phone-number" type="text" placeholder="Phone Number..." [(ngModel)]="client.phoneNumber" />
+        </div>
     </div>
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="phone-number">Phone Number</label>
+    <div class="row align-items-center p-1">
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="date-of-birth">Date of Birth</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="date-of-birth" type="text" placeholder="Date of Birth..." [(ngModel)]="client.dateOfBirth" />
+        </div>
+        <div class="col-md-2 text-right">
+            <label class="form-label" for="occupation">Occupation</label>
+        </div>
+        <div class="col-md-2">
+            <input class="form-control" id="occupation" type="text" placeholder="Occupation..." [(ngModel)]="client.occupation" />
+        </div>
     </div>
-    <div class="col-md-2">
-        <input class="form-control" id="phone-number" type="text" placeholder="Phone Number..." [(ngModel)]="client.phoneNumber" />
-    </div>
-</div>
-<div class="row align-items-center p-1">
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="date-of-birth">Date of Birth</label>
-    </div>
-    <div class="col-md-2">
-        <input class="form-control" id="date-of-birth" type="text" placeholder="Date of Birth..." [(ngModel)]="client.dateOfBirth" />
-    </div>
-    <div class="col-md-2 text-right">
-        <label class="form-label" for="occupation">Occupation</label>
-    </div>
-    <div class="col-md-2">
-        <input class="form-control" id="occupation" type="text" placeholder="Occupation..." [(ngModel)]="client.occupation" />
-    </div>
-</div>
+</ng-container>

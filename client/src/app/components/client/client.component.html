@@ -18,7 +18,7 @@
                 <td>{{ client.client.lastName }}</td>
             </tr>
         </tbody>
-        <tbody *ngIf="!clients.length">
+        <tbody *ngIf="!clients.length && !isLoading">
             <tr>
                 <td colspan="2">No clients found</td>
             </tr>
@@ -26,7 +26,8 @@
         <tbody *ngIf="isLoading">
             <tr>
                 <td colspan="2" class="text-center">
-                    <div class="align-middle">
+                    <loading></loading>
+                    <!-- <div class="align-middle">
                         <div class="lds-roller">
                             <div></div>
                             <div></div>
@@ -38,7 +39,7 @@
                             <div></div>
                         </div>
                         <span>Loading clients</span>
-                    </div>
+                    </div> -->
                 </td>
             </tr>
         </tbody>

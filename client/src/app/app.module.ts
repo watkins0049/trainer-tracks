@@ -7,6 +7,9 @@ import { HttpClient } from 'app/utilities/http/http.client';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from 'app/components/component.routing.module';
+
+import { LoadingComponent } from 'app/components/loading/loading.component';
+
 import { TrainerMenuComponent } from 'app/components/trainerMenu/trainer-menu.component';
 import { LoginComponent } from 'app/components/login/login.component';
 import { ClientComponent } from 'app/components/client/client.component';
@@ -15,6 +18,9 @@ import { ClientDetailsComponent } from 'app/components/clientDetails/client-deta
 @NgModule({
     declarations: [
         AppComponent,
+
+        LoadingComponent,
+
         TrainerMenuComponent,
         LoginComponent,
         ClientComponent,
