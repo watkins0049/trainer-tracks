@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { ActivatedRoute } from '@angular/router';
 
 import { HttpClient } from 'app/utilities/http/http.client';
-// import { Client } from 'app/model/client';
+import { Client } from 'app/model/client';
 
 @Component({
     selector: 'client-details',
@@ -10,12 +10,27 @@ import { HttpClient } from 'app/utilities/http/http.client';
 })
 export class ClientDetailsComponent implements OnInit {
 
-    constructor(private httpClient: HttpClient) {
+    public client = new Client();
 
-    }
+    constructor(
+        private httpClient: HttpClient,
+        private activatedRoute: ActivatedRoute
+    ) { }
 
     public ngOnInit(): void {
+        const routeParams = this.activatedRoute.snapshot.params;
+        this.loadClientDetails(routeParams.clientId);
+    }
 
+    private loadClientDetails(clientId: number): void {
+        const params = {
+            clientId: clientId
+        }
+
+        this.httpClient.get('client/clientDetails', params)
+            .subscribe(res => {
+                this.client = res.json();
+            });
     }
 
 }

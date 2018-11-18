@@ -42,5 +42,12 @@ namespace TrainerTracks.Controllers
 
             return results;
         }
+
+        [HttpGet("clientDetails")]
+        public Client ClientDetails(int clientId)
+        {
+            var results = this.context.Client.Where(c => c.ClientId == clientId).FirstOrDefault();
+            return results;
+        }
     }
 }
