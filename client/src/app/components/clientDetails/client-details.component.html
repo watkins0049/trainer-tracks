@@ -1,4 +1,7 @@
-<div class="row align-items-center">
+<div class="p-1">
+    <button class="btn btn-success" (click)="saveClient()">Save</button>
+</div>
+<div class="row align-items-center p-1">
     <div class="col-md-2 text-right">
         <label class="form-label" for="first-name">First Name</label>
     </div>
@@ -18,7 +21,7 @@
         <input class="form-control" id="sex" type="text" placeholder="Sex..." [(ngModel)]="client.sex" />
     </div>
 </div>
-<div class="row align-items-center">
+<div class="row align-items-center p-1">
     <div class="col-md-2 text-right">
         <label class="form-label" for="email-address">Email Address</label>
     </div>
@@ -32,7 +35,7 @@
         <input class="form-control" id="phone-number" type="text" placeholder="Phone Number..." [(ngModel)]="client.phoneNumber" />
     </div>
 </div>
-<div class="row align-items-center">
+<div class="row align-items-center p-1">
     <div class="col-md-2 text-right">
         <label class="form-label" for="date-of-birth">Date of Birth</label>
     </div>

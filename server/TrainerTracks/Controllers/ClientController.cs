@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using System.Threading;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.Entity;
@@ -48,6 +47,13 @@ namespace TrainerTracks.Controllers
         {
             var results = this.context.Client.Where(c => c.ClientId == clientId).FirstOrDefault();
             return results;
+        }
+
+        [HttpPost("saveClient")]
+        public void SaveClient(Client client)
+        {
+            this.context.Client.Update(client);
+            this.context.SaveChanges();
         }
     }
 }

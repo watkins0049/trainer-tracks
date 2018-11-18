@@ -33,4 +33,11 @@ export class ClientDetailsComponent implements OnInit {
             });
     }
 
+    public saveClient(): void {
+        this.httpClient.post('client/saveClient', this.client)
+            .subscribe(res => {
+                const test = "this";
+            });
+    }
+
 }
