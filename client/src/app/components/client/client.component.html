@@ -13,7 +13,7 @@
             <th scope="col">Last Name</th>
         </thead>
         <tbody *ngIf="clients.length">
-            <tr class="pointer" *ngFor="let client of clients">
+            <tr class="pointer" *ngFor="let client of clients" (click)="navigateToClientDetails(client.client.clientId)">
                 <td>{{ client.client.firstName }}</td>
                 <td>{{ client.client.lastName }}</td>
             </tr>
