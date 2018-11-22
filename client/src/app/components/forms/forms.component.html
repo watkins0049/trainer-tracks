@@ -1,0 +1,28 @@
+<h2>Forms Search</h2>
+<div class="row">
+    <table class="table table-hover">
+        <thead>
+            <th scope="col">Form Name</th>
+            <!-- <th scope="col">Last Name</th> -->
+        </thead>
+        <tbody *ngIf="forms.length">
+            <!-- (click)="navigateToClientDetails(client.client.clientId)" -->
+            <tr class="pointer link" *ngFor="let form of forms">
+                <td>{{ form.formName }}</td>
+                <!-- <td>{{ form.form.formBytes }}</td> -->
+            </tr>
+        </tbody>
+        <tbody *ngIf="!forms.length && !isLoading">
+            <tr>
+                <td colspan="1">No forms found</td>
+            </tr>
+        </tbody>
+        <tbody *ngIf="isLoading">
+            <tr>
+                <td colspan="1" class="text-center">
+                    <loading></loading>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

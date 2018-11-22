@@ -14,6 +14,7 @@ import { TrainerMenuComponent } from 'app/components/trainerMenu/trainer-menu.co
 import { LoginComponent } from 'app/components/login/login.component';
 import { ClientComponent } from 'app/components/client/client.component';
 import { ClientDetailsComponent } from 'app/components/clientDetails/client-details.component';
+import { FormsComponent } from './components/forms/forms.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +25,8 @@ import { ClientDetailsComponent } from 'app/components/clientDetails/client-deta
         TrainerMenuComponent,
         LoginComponent,
         ClientComponent,
-        ClientDetailsComponent
+        ClientDetailsComponent,
+        FormsComponent
     ],
     imports: [
         BrowserModule, FormsModule, HttpModule, ReactiveFormsModule,
