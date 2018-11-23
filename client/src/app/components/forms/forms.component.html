@@ -6,8 +6,8 @@
             <!-- <th scope="col">Last Name</th> -->
         </thead>
         <tbody *ngIf="forms.length">
-            <!-- (click)="navigateToClientDetails(client.client.clientId)" -->
-            <tr class="pointer link" *ngFor="let form of forms">
+            <!--  -->
+            <tr class="pointer link" *ngFor="let form of forms" (click)="downloadTrainerForm(form.formName)">
                 <td>{{ form.formName }}</td>
                 <!-- <td>{{ form.form.formBytes }}</td> -->
             </tr>
