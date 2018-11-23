@@ -1,12 +1,11 @@
-<h2>Forms Search</h2>
+<h2>Client Forms</h2>
 <div class="row">
     <table class="table table-hover">
         <thead>
             <th scope="col">Form Name</th>
         </thead>
         <tbody *ngIf="forms.length">
-            <!--  -->
-            <tr class="pointer link" *ngFor="let form of forms" (click)="downloadTrainerForm(form.formName)">
+            <tr class="pointer link" *ngFor="let form of forms" (click)="downloadClientForm(form.formName)">
                 <td>{{ form.formName }}</td>
             </tr>
         </tbody>

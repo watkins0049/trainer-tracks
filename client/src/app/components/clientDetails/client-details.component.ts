@@ -14,6 +14,8 @@ export class ClientDetailsComponent implements OnInit {
     public isSaving = false;
     public isLoading = false;
 
+    private clientId: string;
+
     constructor(
         private httpClient: HttpClient,
         private activatedRoute: ActivatedRoute,
@@ -22,14 +24,15 @@ export class ClientDetailsComponent implements OnInit {
 
     public ngOnInit(): void {
         const routeParams = this.activatedRoute.snapshot.params;
-        this.loadClientDetails(routeParams.clientId);
+        this.clientId = routeParams.clientId;
+        this.loadClientDetails();
     }
 
-    private loadClientDetails(clientId: number): void {
+    private loadClientDetails(): void {
         this.isLoading = true;
 
         const params = {
-            clientId: clientId
+            clientId: this.clientId
         };
 
         this.httpClient.get('client/clientDetails', params)
@@ -42,7 +45,7 @@ export class ClientDetailsComponent implements OnInit {
     }
 
     public navigateBack(): void {
-        this.router.navigateByUrl(`trainer/client`);
+        this.router.navigateByUrl('trainer/client');
     }
 
     public saveClient(): void {
@@ -52,6 +55,10 @@ export class ClientDetailsComponent implements OnInit {
                 () => { },
                 () => { },
                 () => { this.isSaving = false; });
+    }
+
+    public navigateToClientForms(): void {
+        this.router.navigateByUrl(`trainer/clientForms/${this.clientId}`);
     }
 
 }

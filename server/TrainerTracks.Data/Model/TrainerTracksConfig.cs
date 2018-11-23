@@ -5,5 +5,6 @@ namespace TrainerTracks.Data.Model
     {
         public string JwtKey { get; set; }
         public string BaseTrainerFormsDirectory { get; set; }
+        public string BaseClientFormsDirectory { get; set; }
     }
 }

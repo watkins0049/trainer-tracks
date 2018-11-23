@@ -14,6 +14,7 @@ import { TrainerMenuComponent } from 'app/components/trainerMenu/trainer-menu.co
 import { LoginComponent } from 'app/components/login/login.component';
 import { ClientComponent } from 'app/components/client/client.component';
 import { ClientDetailsComponent } from 'app/components/clientDetails/client-details.component';
+import { ClientFormsComponent } from 'app/components/clientForms/client-forms.component';
 import { FormsComponent } from './components/forms/forms.component';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { FormsComponent } from './components/forms/forms.component';
         LoginComponent,
         ClientComponent,
         ClientDetailsComponent,
+        ClientFormsComponent,
         FormsComponent
     ],
     imports: [

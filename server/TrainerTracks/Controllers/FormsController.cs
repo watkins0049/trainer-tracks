@@ -51,7 +51,6 @@ namespace TrainerTracks.Controllers
             var trainerId = identity.FindFirst("TrainerId").Value;
 
             formName = formName.SanitizeFileName();
-
             var fullFilePath = Path.Combine(config.Value.BaseTrainerFormsDirectory, trainerId, formName);
 
             var stream = new FileStream(fullFilePath, FileMode.Open);
