@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using System;
-using System.Linq;
-using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO.Account;
-using TrainerTracks.Security;
 using TrainerTracks.Services;
 
 namespace TrainerTracks.Controllers
@@ -17,45 +13,46 @@ namespace TrainerTracks.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
-        private readonly TrainerTracksContext context;
-        private readonly string INVALID_CREDENTIALS_ERROR_MESSAGE = "Email address or password is incorrect.";
+        private readonly IAccountServices accountServices;
 
-        public AccountController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        public AccountController(IOptions<TrainerTracksConfig> config, IAccountServices accountServices)
         {
             this.config = config;
-            this.context = context;
+            this.accountServices = accountServices;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
         public UserClaimsDTO Login(UserDTO user)
         {
-            var userCredentials = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", user.emailAddress);
+            UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
+            return userClaims;
+            //var userCredentials = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", user.emailAddress);
 
-            if (userCredentials == null || userCredentials.Salt == null || userCredentials.Password == null)
-            {
-                throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
-            }
+            //if (userCredentials == null || userCredentials.Salt == null || userCredentials.Password == null)
+            //{
+            //    throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
+            //}
 
-            var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, userCredentials.Password);
+            //var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, userCredentials.Password);
 
-            if (!pwTest)
-            {
-                throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
-            }
+            //if (!pwTest)
+            //{
+            //    throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
+            //}
 
-            var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
+            //var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
 
-            var claims = AccountServices.SetupClaims(trainer);
-            var token = AccountServices.GenerateSecurityToken(claims, this.config.Value.JwtKey);
+            //var claims = AccountServices.SetupClaims(trainer);
+            //var token = AccountServices.GenerateSecurityToken(claims, this.config.Value.JwtKey);
 
-            UserClaimsDTO claimsDto = new UserClaimsDTO()
-            {
-                Claims = claims,
-                Token = token
-            };
+            //UserClaimsDTO claimsDto = new UserClaimsDTO()
+            //{
+            //    Claims = claims,
+            //    Token = token
+            //};
 
-            return claimsDto;
+            //return claimsDto;
         }
     }
 }

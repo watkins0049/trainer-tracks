@@ -1,11 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using TrainerTracks.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Data.Model.Entity
 {
     public class Trainer
     {
+        public Trainer()
+        {
+        }
+
         [Key]
         public Int64 TrainerId { get; set; }
 
@@ -13,7 +17,5 @@ namespace TrainerTracks.Data.Model.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
-
-        //public List<TrainerClients> TrainerClients { get; set; }
     }
 }
