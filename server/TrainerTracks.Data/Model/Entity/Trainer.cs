@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using TrainerTracks.Data.Model.DTO.Account;
+using System.Security.Claims;
+using TrainerTracks.Data.Enums;
 
 namespace TrainerTracks.Data.Model.Entity
 {
     public class Trainer
     {
-        public Trainer()
-        {
-        }
-
         [Key]
         public Int64 TrainerId { get; set; }
 
@@ -17,5 +15,21 @@ namespace TrainerTracks.Data.Model.Entity
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
+
+        public List<Claim> GenerateClaims()
+        {
+            List<Claim> result = new List<Claim>
+            {
+                new Claim(ClaimTypes.Email, EmailAddress),
+                new Claim(ClaimTypes.Name, FirstName + " " + LastName),
+                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString()),
+                new Claim("TrainerId", TrainerId.ToString())
+            };
+
+            return result;
+        }
+
+        // transient
+
     }
 }

@@ -21,40 +21,19 @@ namespace TrainerTracks.Services
 
         public UserClaimsDTO SetupUserClaims(UserDTO user)
         {
-            if (userDao.IsUserAuthenticated(user))
+            UserClaimsDTO userClaims = new UserClaimsDTO
             {
-                Trainer trainer = userDao.RetrieveUserInformation(user);
-                List<Claim> claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Email, user.emailAddress),
-                    new Claim(ClaimTypes.Name, trainer.FirstName + " " + trainer.LastName),
-                    new Claim(ClaimTypes.Role, "Trainer"),
-                    new Claim("TrainerId", trainer.TrainerId.ToString())
-                };
-
-                UserClaimsDTO userClaims = new UserClaimsDTO()
-                {
-                    Claims = claims,
-                    Token = ""
-                };
-                return userClaims;
-            }
-
-            return null;
+                Claims = GetTrainerClaims(user),
+                Token = ""
+            };
+            return userClaims;
         }
 
-        //public static List<Claim> SetupClaims(Trainer user)
-        //{
-        //    List<Claim> result = new List<Claim>
-        //    {
-        //        new Claim(ClaimTypes.Email, user.EmailAddress),
-        //        new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName),
-        //        new Claim(ClaimTypes.Role, "Trainer"),
-        //        new Claim("TrainerId", user.TrainerId.ToString())
-        //    };
-
-        //    return result;
-        //}
+        private List<Claim> GetTrainerClaims(UserDTO user)
+        {
+            Trainer trainer = userDao.RetrieveUserInformation(user);
+            return trainer.GenerateClaims();
+        }
 
         public static string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
         {

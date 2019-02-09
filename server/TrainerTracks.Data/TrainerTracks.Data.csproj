@@ -14,5 +14,6 @@
 
   <ItemGroup>
     <Folder Include="Dao\" />
+    <Folder Include="Enums\" />
   </ItemGroup>
 </Project>

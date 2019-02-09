@@ -11,13 +11,13 @@ using System.Security.Authentication;
 
 namespace TrainerTracks.Test.Controller
 {
-    public class AccountControllerTest: ControllerBase
+    public class AccountControllerShould: ControllerBase
     {
         private Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private Mock<IAccountServices> accountServicesMock = new Mock<IAccountServices>();
         private AccountController accountController;
 
-        public AccountControllerTest()
+        public AccountControllerShould()
         {
             accountController = new AccountController(configMock.Object, accountServicesMock.Object);
         }
@@ -44,7 +44,8 @@ namespace TrainerTracks.Test.Controller
         /// <summary>
         /// GIVEN a UserDTO with an incorrect email and/or password
         /// WHEN a user requests access with incorrect credentials
-        /// THEN an InvalidCredentialException should be thrown
+        /// THEN an UnauthorizedAccessException is thrown
+        /// AND the message reads "Username or password is incorrect."
         /// </summary>
         [Fact]
         public void InvalidCredentialsReturnsError()
@@ -54,12 +55,14 @@ namespace TrainerTracks.Test.Controller
                 emailAddress = "user@test.com",
                 password = "password1234"
             };
-            InvalidCredentialException mockException = new InvalidCredentialException("Email or password is incorrect.");
+            UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 
             accountServicesMock.Setup(a => a.SetupUserClaims(user)).Throws(mockException);
 
-            InvalidCredentialException ex = Assert.Throws<InvalidCredentialException>(() => accountController.Login(user));
-            Assert.Equal("Email or password is incorrect.", ex.Message);
+            // THEN ensure an UnauthorizedAccessException is thrown
+            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountController.Login(user));
+            // AND ensure the message reads "Username or password is incorrect."
+            Assert.Equal("Username or password is incorrect.", mockException.Message);
         }
 
     }

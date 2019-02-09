@@ -27,32 +27,6 @@ namespace TrainerTracks.Controllers
         {
             UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
             return userClaims;
-            //var userCredentials = this.context.ExecuteProcedure<CredentialsDTO>("GetUserLoginCredentials", user.emailAddress);
-
-            //if (userCredentials == null || userCredentials.Salt == null || userCredentials.Password == null)
-            //{
-            //    throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
-            //}
-
-            //var pwTest = PasswordHashingHelpers.VerifyPassword(user.password, userCredentials.Password);
-
-            //if (!pwTest)
-            //{
-            //    throw new Exception(this.INVALID_CREDENTIALS_ERROR_MESSAGE);
-            //}
-
-            //var trainer = this.context.Trainer.Where(t => t.EmailAddress.Equals(user.emailAddress)).First();
-
-            //var claims = AccountServices.SetupClaims(trainer);
-            //var token = AccountServices.GenerateSecurityToken(claims, this.config.Value.JwtKey);
-
-            //UserClaimsDTO claimsDto = new UserClaimsDTO()
-            //{
-            //    Claims = claims,
-            //    Token = token
-            //};
-
-            //return claimsDto;
         }
     }
 }

@@ -6,6 +6,8 @@ using Xunit;
 using Moq;
 using TrainerTracks.Data.Dao;
 using TrainerTracks.Data.Model.Entity;
+using TrainerTracks.Data.Enums;
+using System;
 
 namespace TrainerTracks.Test.Services
 {
@@ -39,7 +41,7 @@ namespace TrainerTracks.Test.Services
             };
 
             // WHEN the user is correctly authenticated
-            userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
+            //userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
             // AND the user's login information is returned from the database
             Trainer mockTrainer = new Trainer()
             {
@@ -54,7 +56,7 @@ namespace TrainerTracks.Test.Services
             List<Claim> claims = new List<Claim> {
                 new Claim(ClaimTypes.Email, "test@user.com"),
                 new Claim(ClaimTypes.Name, "Test User"),
-                new Claim(ClaimTypes.Role, "Trainer"),
+                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString()),
                 new Claim("TrainerId", "1")
             };
 
@@ -69,6 +71,32 @@ namespace TrainerTracks.Test.Services
 
             // AND a non-null Token
             Assert.NotNull(userClaims.Token);
+        }
+
+        /// <summary>
+        /// GIVEN a UserDTO containing a user's e-mail and password
+        /// WHEN a user is not correctly authenticated
+        /// THEN an UnauthorizedAccessException is thrown
+        /// AND the message reads "Username or password is incorrect."
+        /// </summary>
+        [Fact]
+        public void ThrowAnUnauthorizedAccessExceptionWhenAUserIsNotAuthenticated()
+        {
+            // GIVEN a UserDTO containing a user's e-mail and password
+            UserDTO user = new UserDTO()
+            {
+                emailAddress = "test@user.com",
+                password = "password1234"
+            };
+            UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
+
+            // WHEN a user is not correctly authenticated
+            userDaoMock.Setup(u => u.RetrieveUserInformation(user)).Throws(mockException);
+
+            // THEN ensure an UnauthorizedAccessException is thrown
+            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));
+            // AND ensure the message reads "Username or password is incorrect."
+            Assert.Equal("Username or password is incorrect.", mockException.Message);
         }
     }
 }
