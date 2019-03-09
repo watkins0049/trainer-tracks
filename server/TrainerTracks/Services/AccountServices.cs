@@ -21,10 +21,11 @@ namespace TrainerTracks.Services
 
         public UserClaimsDTO SetupUserClaims(UserDTO user)
         {
+            List<Claim> claims = GetTrainerClaims(user);
             UserClaimsDTO userClaims = new UserClaimsDTO
             {
-                Claims = GetTrainerClaims(user),
-                Token = ""
+                Claims = claims,
+                Token = GenerateSecurityToken(claims, "fc5a6707-634b-4776-ba70-6f6cc45fbcfc")
             };
             return userClaims;
         }
@@ -35,22 +36,22 @@ namespace TrainerTracks.Services
             return trainer.GenerateClaims();
         }
 
-        public static string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
+        public string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
             ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtEncoding);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            byte[] key = Encoding.ASCII.GetBytes(jwtEncoding);
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
+            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            var tokenString = tokenHandler.WriteToken(token);
+            string tokenString = tokenHandler.WriteToken(token);
 
             return tokenString;
         }

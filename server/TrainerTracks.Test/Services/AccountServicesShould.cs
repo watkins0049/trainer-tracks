@@ -8,6 +8,8 @@ using TrainerTracks.Data.Dao;
 using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
 
 namespace TrainerTracks.Test.Services
 {
@@ -28,7 +30,7 @@ namespace TrainerTracks.Test.Services
         /// THEN return a UserClaimsDTO containing an e-mail claim with the
         /// user's e-mail, a name claim with the user's full name, a role claim
         /// of trainer, and a TrainerId claim with the trainer's ID
-        /// AND a non-null Token
+        /// AND an encrypted Token
         /// </summary>
         [Fact]
         public void ReturnUserClaimsDTOForAuthenticatedUser()
@@ -43,7 +45,7 @@ namespace TrainerTracks.Test.Services
             // WHEN the user is correctly authenticated
             //userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
             // AND the user's login information is returned from the database
-            Trainer mockTrainer = new Trainer()
+            Trainer mockTrainer = new Trainer
             {
                 TrainerId = 1,
                 EmailAddress = "test@user.com",
@@ -60,17 +62,21 @@ namespace TrainerTracks.Test.Services
                 new Claim("TrainerId", "1")
             };
 
+            //string token = accountServices.GenerateSecurityToken(claims, "fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
+
             // THEN return a UserClaimsDTO containing an e-mail claim with the
             // user's e-mail, a name claim with the user's full name, a role claim
             // of trainer, and a TrainerId claim with the trainer's ID
-            for (int i=0; i<claims.Count; i++)
+            for (int i = 0; i < claims.Count; i++)
             {
                 Assert.Equal(claims[i].GetType(), userClaims.Claims[i].GetType());
                 Assert.Equal(claims[i].Value, userClaims.Claims[i].Value);
             }
 
-            // AND a non-null Token
-            Assert.NotNull(userClaims.Token);
+            // AND an encrypted Token
+            var handler = new JwtSecurityTokenHandler();
+            var decodedClaims = handler.ReadToken(userClaims.Token) as JwtSecurityToken;
+            Assert.NotNull(decodedClaims);
         }
 
         /// <summary>
@@ -83,7 +89,7 @@ namespace TrainerTracks.Test.Services
         public void ThrowAnUnauthorizedAccessExceptionWhenAUserIsNotAuthenticated()
         {
             // GIVEN a UserDTO containing a user's e-mail and password
-            UserDTO user = new UserDTO()
+            UserDTO user = new UserDTO
             {
                 emailAddress = "test@user.com",
                 password = "password1234"

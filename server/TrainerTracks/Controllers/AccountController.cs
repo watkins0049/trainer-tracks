@@ -25,8 +25,7 @@ namespace TrainerTracks.Controllers
         [HttpPost("login")]
         public UserClaimsDTO Login(UserDTO user)
         {
-            UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
-            return userClaims;
+            return accountServices.SetupUserClaims(user);
         }
     }
 }
