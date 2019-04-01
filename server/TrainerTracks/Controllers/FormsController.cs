@@ -14,7 +14,7 @@ using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO.Forms;
 using TrainerTracks.Security;
 
-namespace TrainerTracks.Controllers
+namespace TrainerTracks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

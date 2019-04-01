@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO.Account;
-using TrainerTracks.Services;
+using TrainerTracks.Web.Services;
 
-namespace TrainerTracks.Controllers
+namespace TrainerTracks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

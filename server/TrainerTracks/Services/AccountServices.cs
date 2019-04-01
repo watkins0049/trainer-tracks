@@ -8,7 +8,7 @@ using TrainerTracks.Data.Dao;
 using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model.Entity;
 
-namespace TrainerTracks.Services
+namespace TrainerTracks.Web.Services
 {
     public class AccountServices : IAccountServices
     {
@@ -32,8 +32,12 @@ namespace TrainerTracks.Services
 
         private List<Claim> GetTrainerClaims(UserDTO user)
         {
-            Trainer trainer = userDao.RetrieveUserInformation(user);
-            return trainer.GenerateClaims();
+            if (userDao.IsUserAuthenticated(user))
+            {
+                Trainer trainer = userDao.RetrieveUserInformation(user);
+                return trainer.GenerateClaims();
+            }
+            throw new UnauthorizedAccessException("Username or password is incorrect.");
         }
 
         public string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
@@ -51,9 +55,7 @@ namespace TrainerTracks.Services
             };
             SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            string tokenString = tokenHandler.WriteToken(token);
-
-            return tokenString;
+            return tokenHandler.WriteToken(token);
         }
     }
 }

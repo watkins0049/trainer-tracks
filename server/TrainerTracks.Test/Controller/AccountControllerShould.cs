@@ -1,6 +1,6 @@
 using System;
-using TrainerTracks.Controllers;
-using TrainerTracks.Services;
+using TrainerTracks.Web.Controllers;
+using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
 using Microsoft.Extensions.Options;
@@ -32,8 +32,8 @@ namespace TrainerTracks.Test.Controller
         {
             UserDTO user = new UserDTO()
             {
-                emailAddress = "user@test.com",
-                password = "password1234"
+                EmailAddress = "user@test.com",
+                Password = "password1234"
             };
             accountServicesMock.Setup(a => a.SetupUserClaims(user)).Returns(new UserClaimsDTO());
             UserClaimsDTO userClaimsDto = accountController.Login(user);
@@ -52,8 +52,8 @@ namespace TrainerTracks.Test.Controller
         {
             UserDTO user = new UserDTO()
             {
-                emailAddress = "user@test.com",
-                password = "password1234"
+                EmailAddress = "user@test.com",
+                Password = "password1234"
             };
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 

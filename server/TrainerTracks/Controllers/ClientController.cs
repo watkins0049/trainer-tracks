@@ -13,7 +13,7 @@ using TrainerTracks.Data.Model.DTO.Forms;
 using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Security;
 
-namespace TrainerTracks.Controllers
+namespace TrainerTracks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

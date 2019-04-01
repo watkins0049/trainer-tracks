@@ -1,7 +1,6 @@
-﻿using System;
-using TrainerTracks.Data.Model.DTO.Account;
+﻿using TrainerTracks.Data.Model.DTO.Account;
 
-namespace TrainerTracks.Services
+namespace TrainerTracks.Web.Services
 {
     public interface IAccountServices
     {

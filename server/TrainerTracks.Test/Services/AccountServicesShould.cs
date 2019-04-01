@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using TrainerTracks.Data.Model.DTO.Account;
-using TrainerTracks.Services;
+using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
 using TrainerTracks.Data.Dao;
@@ -9,7 +9,6 @@ using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 
 namespace TrainerTracks.Test.Services
 {
@@ -36,14 +35,13 @@ namespace TrainerTracks.Test.Services
         public void ReturnUserClaimsDTOForAuthenticatedUser()
         {
             // GIVEN a UserDTO containing a user's e-mail and password
-            UserDTO user = new UserDTO()
+            UserDTO user = new UserDTO
             {
-                emailAddress = "test@user.com",
-                password = "password1234"
+                EmailAddress = "test@user.com",
+                Password = "password1234"
             };
 
             // WHEN the user is correctly authenticated
-            //userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
             // AND the user's login information is returned from the database
             Trainer mockTrainer = new Trainer
             {
@@ -52,6 +50,7 @@ namespace TrainerTracks.Test.Services
                 FirstName = "Test",
                 LastName = "User"
             };
+            userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
             userDaoMock.Setup(t => t.RetrieveUserInformation(user)).Returns(mockTrainer);
             UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
 
@@ -61,8 +60,6 @@ namespace TrainerTracks.Test.Services
                 new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString()),
                 new Claim("TrainerId", "1")
             };
-
-            //string token = accountServices.GenerateSecurityToken(claims, "fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
 
             // THEN return a UserClaimsDTO containing an e-mail claim with the
             // user's e-mail, a name claim with the user's full name, a role claim
@@ -91,13 +88,13 @@ namespace TrainerTracks.Test.Services
             // GIVEN a UserDTO containing a user's e-mail and password
             UserDTO user = new UserDTO
             {
-                emailAddress = "test@user.com",
-                password = "password1234"
+                EmailAddress = "test@user.com",
+                Password = "password1234"
             };
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 
             // WHEN a user is not correctly authenticated
-            userDaoMock.Setup(u => u.RetrieveUserInformation(user)).Throws(mockException);
+            userDaoMock.Setup(u => u.IsUserAuthenticated(user)).Returns(false);
 
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));

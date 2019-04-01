@@ -20,9 +20,6 @@
     <Folder Include="Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TrainerTracks\TrainerTracks.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Mvc.Core, Version=2.1.1.0, Culture=neutral, PublicKeyToken=adb9793829ddae60" />
     <Reference Include="Microsoft.AspNetCore.Mvc.Core">
       <HintPath>..\..\..\..\..\..\..\usr\local\share\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.mvc.core\2.1.1\lib\netstandard2.0\Microsoft.AspNetCore.Mvc.Core.dll</HintPath>
@@ -30,5 +27,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Services\UserDao.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TrainerTracks\TrainerTracks.Web.csproj" />
   </ItemGroup>
 </Project>

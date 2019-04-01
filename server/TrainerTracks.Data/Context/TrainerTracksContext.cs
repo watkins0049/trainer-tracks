@@ -38,7 +38,7 @@ namespace TrainerTracks.Data.Context
         {
             T res = new T();
 
-            using (var command = this.Database.GetDbConnection().CreateCommand())
+            using (var command = Database.GetDbConnection().CreateCommand())
             {
                 command.Connection.Open();
                 try
