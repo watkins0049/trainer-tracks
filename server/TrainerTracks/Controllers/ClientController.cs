@@ -21,9 +21,9 @@ namespace TrainerTracks.Web.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
-        private readonly TrainerTracksContext context;
+        private readonly AccountContext context;
 
-        public ClientController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        public ClientController(IOptions<TrainerTracksConfig> config, AccountContext context)
         {
             this.config = config;
             this.context = context;

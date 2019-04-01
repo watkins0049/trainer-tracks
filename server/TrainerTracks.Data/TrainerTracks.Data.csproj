@@ -13,7 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dao\" />
     <Folder Include="Enums\" />
+    <Folder Include="Repository\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="AccountRepository.cs" />
   </ItemGroup>
 </Project>

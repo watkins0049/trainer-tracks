@@ -4,22 +4,23 @@ using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
-using TrainerTracks.Data.Dao;
 using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using TrainerTracks.Data.Repository;
 
 namespace TrainerTracks.Test.Services
 {
     public class AccountServicesShould
     {
-        private readonly Mock<UserDao> userDaoMock = new Mock<UserDao>();
+        private readonly Mock<ITrainerRepository> trainerRepositoryMock = new Mock<ITrainerRepository>();
+        private readonly Mock<ITrainerCredentialsRepository> trainerCredentialsRepositoryMock = new Mock<ITrainerCredentialsRepository>();
         private readonly AccountServices accountServices;
 
         public AccountServicesShould()
         {
-            accountServices = new AccountServices(userDaoMock.Object);
+            accountServices = new AccountServices(trainerRepositoryMock.Object, trainerCredentialsRepositoryMock.Object);
         }
 
         /// <summary>
@@ -50,8 +51,17 @@ namespace TrainerTracks.Test.Services
                 FirstName = "Test",
                 LastName = "User"
             };
-            userDaoMock.Setup(t => t.IsUserAuthenticated(user)).Returns(true);
-            userDaoMock.Setup(t => t.RetrieveUserInformation(user)).Returns(mockTrainer);
+            trainerRepositoryMock.Setup(t => t.GetTrainerByEmail(mockTrainer.EmailAddress)).Returns(mockTrainer);
+
+            TrainerCredentials mockTrainerCredentials = new TrainerCredentials
+            {
+                TrainerId = 1,
+                // the hash of the SHA512 hash of "password1234"
+                Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
+                Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
+            };
+            trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
+
             UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
 
             List<Claim> claims = new List<Claim> {
@@ -89,12 +99,29 @@ namespace TrainerTracks.Test.Services
             UserDTO user = new UserDTO
             {
                 EmailAddress = "test@user.com",
-                Password = "password1234"
+                Password = "Password1234"
             };
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 
             // WHEN a user is not correctly authenticated
-            userDaoMock.Setup(u => u.IsUserAuthenticated(user)).Returns(false);
+            Trainer mockTrainer = new Trainer
+            {
+                TrainerId = 1,
+                EmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User"
+            };
+            trainerRepositoryMock.Setup(t => t.GetTrainerByEmail(mockTrainer.EmailAddress)).Returns(mockTrainer);
+
+            TrainerCredentials mockTrainerCredentials = new TrainerCredentials
+            {
+                TrainerId = 1,
+                // NOTE: the hash should be "$2b$10$sCfS.t4SiS21G9rhNcqKue/PkEiitv/OfB0DojqdkMQneiUQw0l06"
+                // the hash of the SHA512 hash of "password1234"
+                Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
+                Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
+            };
+            trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
 
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));

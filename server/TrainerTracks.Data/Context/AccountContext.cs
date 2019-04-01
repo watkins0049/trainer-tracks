@@ -8,9 +8,9 @@ using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Data.Context
 {
-    public class TrainerTracksContext : DbContext
+    public class AccountContext : DbContext
     {
-        public TrainerTracksContext(DbContextOptions<TrainerTracksContext> options)
+        public AccountContext(DbContextOptions<AccountContext> options)
             : base(options)
         { }
 
@@ -18,19 +18,12 @@ namespace TrainerTracks.Data.Context
         {
             //Configure default schema
             modelBuilder.HasDefaultSchema("tt");
-
-            //modelBuilder.Entity<TrainerClients>()
-            //    .HasOne(p => p.Client)
-            //    .WithMany(b => b.TrainerClients)
-            //    .HasForeignKey(p => p.ClientId);
-
-            //modelBuilder.Entity<TrainerClients>()
-            //    .HasOne(p => p.Trainer)
-            //    .WithMany(b => b.TrainerClients)
-            //    .HasForeignKey(p => p.TrainerId);
         }
         
         public DbSet<Trainer> Trainer { get; set; }
+        public DbSet<TrainerCredentials> TrainerCredentials { get; set; }
+
+        // TODO: remove these...
         public DbSet<Client> Client { get; set; }
         public DbSet<TrainerClients> TrainerClients { get; set; }
 

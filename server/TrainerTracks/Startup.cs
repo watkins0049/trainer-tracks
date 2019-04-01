@@ -77,7 +77,7 @@ namespace TrainerTracks
             #region DB context setup
 
             var connection = Configuration.GetConnectionString("TrainerTracks");
-            services.AddDbContext<TrainerTracksContext>(options => options.UseNpgsql(connection));
+            services.AddDbContext<AccountContext>(options => options.UseNpgsql(connection));
 
             #endregion DB context setup
         }

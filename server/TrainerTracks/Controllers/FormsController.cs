@@ -22,9 +22,9 @@ namespace TrainerTracks.Web.Controllers
     public class FormsController : Controller
     {
         private readonly IOptions<TrainerTracksConfig> config;
-        private readonly TrainerTracksContext context;
+        private readonly AccountContext context;
 
-        public FormsController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        public FormsController(IOptions<TrainerTracksConfig> config, AccountContext context)
         {
             this.config = config;
             this.context = context;

@@ -9,7 +9,7 @@ namespace TrainerTracks.Data.Model.Entity
     public class Trainer
     {
         [Key]
-        public Int64 TrainerId { get; set; }
+        public long TrainerId { get; set; }
 
         public string EmailAddress { get; set; }
         public string FirstName { get; set; }
@@ -28,8 +28,5 @@ namespace TrainerTracks.Data.Model.Entity
 
             return result;
         }
-
-        // transient
-
     }
 }

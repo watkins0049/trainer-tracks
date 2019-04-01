@@ -1,6 +1,6 @@
 CREATE TABLE "tt"."TrainerCredentials" (
   "TrainerId" int PRIMARY KEY,
-  "Password" varchar,
+  "Hash" varchar,
   "Salt" varchar
 );
 
