@@ -8,6 +8,7 @@ using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Repository;
 using System.Security.Cryptography;
+using TrainerTracks.Data.Model;
 
 namespace TrainerTracks.Web.Services
 {
@@ -15,11 +16,15 @@ namespace TrainerTracks.Web.Services
     {
         private readonly ITrainerRepository trainerRepository;
         private readonly ITrainerCredentialsRepository trainerCredentialsRepository;
+        private readonly TrainerTracksConfig config;
 
-        public AccountServices(ITrainerRepository trainerRepository, ITrainerCredentialsRepository trainerCredentialsRepository)
+        public AccountServices(ITrainerRepository trainerRepository,
+            ITrainerCredentialsRepository trainerCredentialsRepository,
+            TrainerTracksConfig config)
         {
             this.trainerRepository = trainerRepository;
             this.trainerCredentialsRepository = trainerCredentialsRepository;
+            this.config = config;
         }
 
         public UserClaimsDTO SetupUserClaims(UserDTO user)
@@ -28,7 +33,7 @@ namespace TrainerTracks.Web.Services
             UserClaimsDTO userClaims = new UserClaimsDTO
             {
                 Claims = claims,
-                Token = GenerateSecurityToken(claims, "fc5a6707-634b-4776-ba70-6f6cc45fbcfc")
+                Token = GenerateSecurityToken(claims)
             };
             return userClaims;
         }
@@ -57,13 +62,13 @@ namespace TrainerTracks.Web.Services
             }
         }
 
-        private string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
+        private string GenerateSecurityToken(List<Claim> claims)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
             ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(jwtEncoding);
+            byte[] key = Encoding.ASCII.GetBytes(config.JwtKey);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,

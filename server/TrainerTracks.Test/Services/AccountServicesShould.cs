@@ -9,6 +9,7 @@ using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using TrainerTracks.Data.Repository;
+using TrainerTracks.Data.Model;
 
 namespace TrainerTracks.Test.Services
 {
@@ -16,11 +17,14 @@ namespace TrainerTracks.Test.Services
     {
         private readonly Mock<ITrainerRepository> trainerRepositoryMock = new Mock<ITrainerRepository>();
         private readonly Mock<ITrainerCredentialsRepository> trainerCredentialsRepositoryMock = new Mock<ITrainerCredentialsRepository>();
+        private readonly Mock<TrainerTracksConfig> configMock = new Mock<TrainerTracksConfig>();
         private readonly AccountServices accountServices;
 
         public AccountServicesShould()
         {
-            accountServices = new AccountServices(trainerRepositoryMock.Object, trainerCredentialsRepositoryMock.Object);
+            accountServices = new AccountServices(trainerRepositoryMock.Object,
+                trainerCredentialsRepositoryMock.Object,
+                configMock.Object);
         }
 
         /// <summary>
@@ -62,8 +66,13 @@ namespace TrainerTracks.Test.Services
             };
             trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
 
+            configMock.Setup(c => c.JwtKey).Returns("fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
+
             UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
 
+            // THEN return a UserClaimsDTO containing an e-mail claim with the
+            // user's e-mail, a name claim with the user's full name, a role claim
+            // of trainer, and a TrainerId claim with the trainer's ID
             List<Claim> claims = new List<Claim> {
                 new Claim(ClaimTypes.Email, "test@user.com"),
                 new Claim(ClaimTypes.Name, "Test User"),
@@ -71,9 +80,6 @@ namespace TrainerTracks.Test.Services
                 new Claim("TrainerId", "1")
             };
 
-            // THEN return a UserClaimsDTO containing an e-mail claim with the
-            // user's e-mail, a name claim with the user's full name, a role claim
-            // of trainer, and a TrainerId claim with the trainer's ID
             for (int i = 0; i < claims.Count; i++)
             {
                 Assert.Equal(claims[i].GetType(), userClaims.Claims[i].GetType());
