@@ -16,16 +16,13 @@ export class HttpClient {
     }
 
     public get(url: string, queryParameters?: object, extraQueryOptions?: RequestOptionsArgs) {
-
-        // extraQueryOptions = extraQueryOptions || {};
-
-        let headers = new Headers();
+        const headers = new Headers();
         this.createAuthorizationHeader(headers);
 
         const queryOptions = Object.assign({}, { headers: headers }, extraQueryOptions);
 
         // Straight lifted from https://stackoverflow.com/questions/41761523/how-to-convert-json-to-query-string-in-angular2
-        let params = new URLSearchParams();
+        const params = new URLSearchParams();
         for (let key in queryParameters) {
             params.set(key, queryParameters[key])
         }
@@ -34,8 +31,8 @@ export class HttpClient {
     }
 
     public post(url: string, data: object) {
-        let headers = new Headers();
-        this.createAuthorizationHeader(headers);
+        const headers = new Headers();
+        // this.createAuthorizationHeader(headers);
         return this.http.post(this.generateUri(url), data, {
             headers: headers
         });

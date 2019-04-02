@@ -12,18 +12,16 @@ namespace TrainerTracks.Web.Controllers
     [Authorize]
     public class AccountController : ControllerBase
     {
-        private readonly IOptions<TrainerTracksConfig> config;
         private readonly IAccountServices accountServices;
 
-        public AccountController(IOptions<TrainerTracksConfig> config, IAccountServices accountServices)
+        public AccountController(IAccountServices accountServices)
         {
-            this.config = config;
             this.accountServices = accountServices;
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public UserClaimsDTO Login(UserDTO user)
+        public UserClaimsDTO Login([FromBody] UserDTO user)
         {
             return accountServices.SetupUserClaims(user);
         }

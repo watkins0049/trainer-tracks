@@ -3,23 +3,19 @@ using TrainerTracks.Web.Controllers;
 using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
-using Microsoft.Extensions.Options;
-using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO.Account;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Authentication;
 
 namespace TrainerTracks.Test.Controller
 {
     public class AccountControllerShould: ControllerBase
     {
-        private Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private Mock<IAccountServices> accountServicesMock = new Mock<IAccountServices>();
         private AccountController accountController;
 
         public AccountControllerShould()
         {
-            accountController = new AccountController(configMock.Object, accountServicesMock.Object);
+            accountController = new AccountController(accountServicesMock.Object);
         }
 
         /// <summary>

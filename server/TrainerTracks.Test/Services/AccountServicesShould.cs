@@ -17,7 +17,7 @@ namespace TrainerTracks.Test.Services
     {
         private readonly Mock<ITrainerRepository> trainerRepositoryMock = new Mock<ITrainerRepository>();
         private readonly Mock<ITrainerCredentialsRepository> trainerCredentialsRepositoryMock = new Mock<ITrainerCredentialsRepository>();
-        private readonly Mock<TrainerTracksConfig> configMock = new Mock<TrainerTracksConfig>();
+        private readonly Mock<ITrainerTracksConfig> configMock = new Mock<ITrainerTracksConfig>();
         private readonly AccountServices accountServices;
 
         public AccountServicesShould()

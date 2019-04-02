@@ -9,6 +9,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TrainerTracks.Data.Context;
 using TrainerTracks.Data.Model;
+using TrainerTracks.Data.Repository;
+using TrainerTracks.Web.Services;
 
 namespace TrainerTracks
 {
@@ -37,8 +39,8 @@ namespace TrainerTracks
         {
             #region JWT setup
 
-            var jwtKey = this.Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
-            var key = Encoding.ASCII.GetBytes(jwtKey);
+            string jwtKey = Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
+            byte[] key = Encoding.ASCII.GetBytes(jwtKey);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,16 +72,25 @@ namespace TrainerTracks
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             // Add our Config object so it can be injected. Reads from the TrainerTracksConfig section of the appsettings.json file.
-            services.Configure<TrainerTracksConfig>(this.Configuration.GetSection("TrainerTracksConfig"));
+            services.Configure<TrainerTracksConfig>(Configuration.GetSection("TrainerTracksConfig"));
 
             #endregion Config file setup
 
             #region DB context setup
 
-            var connection = Configuration.GetConnectionString("TrainerTracks");
+            string connection = Configuration.GetConnectionString("TrainerTracks");
             services.AddDbContext<AccountContext>(options => options.UseNpgsql(connection));
 
             #endregion DB context setup
+
+            #region Services interface coupling
+
+            services.AddScoped<IAccountServices, AccountServices>();
+            services.AddScoped<ITrainerRepository, TrainerRepository>();
+            services.AddScoped<ITrainerCredentialsRepository, TrainerCredentialsRepository>();
+            services.AddScoped<ITrainerTracksConfig, TrainerTracksConfig>();
+
+            #endregion Services interface coupling
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

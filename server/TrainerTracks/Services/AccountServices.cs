@@ -16,11 +16,11 @@ namespace TrainerTracks.Web.Services
     {
         private readonly ITrainerRepository trainerRepository;
         private readonly ITrainerCredentialsRepository trainerCredentialsRepository;
-        private readonly TrainerTracksConfig config;
+        private readonly ITrainerTracksConfig config;
 
         public AccountServices(ITrainerRepository trainerRepository,
             ITrainerCredentialsRepository trainerCredentialsRepository,
-            TrainerTracksConfig config)
+            ITrainerTracksConfig config)
         {
             this.trainerRepository = trainerRepository;
             this.trainerCredentialsRepository = trainerCredentialsRepository;
