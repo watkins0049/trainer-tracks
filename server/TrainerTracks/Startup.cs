@@ -37,6 +37,14 @@ namespace TrainerTracks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Services interface coupling
+
+            services.AddScoped<IAccountServices, AccountServices>();
+            services.AddScoped<ITrainerRepository, TrainerRepository>();
+            services.AddScoped<ITrainerCredentialsRepository, TrainerCredentialsRepository>();
+
+            #endregion Services interface coupling
+
             #region JWT setup
 
             string jwtKey = Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
@@ -82,15 +90,6 @@ namespace TrainerTracks
             services.AddDbContext<AccountContext>(options => options.UseNpgsql(connection));
 
             #endregion DB context setup
-
-            #region Services interface coupling
-
-            services.AddScoped<IAccountServices, AccountServices>();
-            services.AddScoped<ITrainerRepository, TrainerRepository>();
-            services.AddScoped<ITrainerCredentialsRepository, TrainerCredentialsRepository>();
-            services.AddScoped<ITrainerTracksConfig, TrainerTracksConfig>();
-
-            #endregion Services interface coupling
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

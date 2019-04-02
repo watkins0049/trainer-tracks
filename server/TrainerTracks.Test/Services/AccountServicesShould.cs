@@ -10,6 +10,7 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using TrainerTracks.Data.Repository;
 using TrainerTracks.Data.Model;
+using Microsoft.Extensions.Options;
 
 namespace TrainerTracks.Test.Services
 {
@@ -17,7 +18,7 @@ namespace TrainerTracks.Test.Services
     {
         private readonly Mock<ITrainerRepository> trainerRepositoryMock = new Mock<ITrainerRepository>();
         private readonly Mock<ITrainerCredentialsRepository> trainerCredentialsRepositoryMock = new Mock<ITrainerCredentialsRepository>();
-        private readonly Mock<ITrainerTracksConfig> configMock = new Mock<ITrainerTracksConfig>();
+        private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private readonly AccountServices accountServices;
 
         public AccountServicesShould()
@@ -66,7 +67,7 @@ namespace TrainerTracks.Test.Services
             };
             trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
 
-            configMock.Setup(c => c.JwtKey).Returns("fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
+            configMock.Setup(c => c.Value.JwtKey).Returns("fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
 
             UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
 

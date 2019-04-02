@@ -6,8 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
     <Folder Include="wwwroot\" />
+    <Folder Include="Repository\" />
+    <Folder Include="Data\" />
+    <Folder Include="Data\Enums\" />
+    <Folder Include="Data\Context\" />
+    <Folder Include="Data\Model\" />
+    <Folder Include="Data\Repository\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,7 +23,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TrainerTracks.Data\TrainerTracks.Data.csproj" />
     <ProjectReference Include="..\TrainerTracks.Security\TrainerTracks.Security.csproj" />
   </ItemGroup>
 

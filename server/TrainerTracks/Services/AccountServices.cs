@@ -9,6 +9,7 @@ using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Repository;
 using System.Security.Cryptography;
 using TrainerTracks.Data.Model;
+using Microsoft.Extensions.Options;
 
 namespace TrainerTracks.Web.Services
 {
@@ -16,11 +17,11 @@ namespace TrainerTracks.Web.Services
     {
         private readonly ITrainerRepository trainerRepository;
         private readonly ITrainerCredentialsRepository trainerCredentialsRepository;
-        private readonly ITrainerTracksConfig config;
+        private readonly IOptions<TrainerTracksConfig> config;
 
         public AccountServices(ITrainerRepository trainerRepository,
             ITrainerCredentialsRepository trainerCredentialsRepository,
-            ITrainerTracksConfig config)
+            IOptions<TrainerTracksConfig> config)
         {
             this.trainerRepository = trainerRepository;
             this.trainerCredentialsRepository = trainerCredentialsRepository;
@@ -68,7 +69,7 @@ namespace TrainerTracks.Web.Services
             ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-            byte[] key = Encoding.ASCII.GetBytes(config.JwtKey);
+            byte[] key = Encoding.ASCII.GetBytes(config.Value.JwtKey);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
