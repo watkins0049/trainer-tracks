@@ -7,12 +7,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\" />
-    <Folder Include="Repository\" />
     <Folder Include="Data\" />
     <Folder Include="Data\Enums\" />
     <Folder Include="Data\Context\" />
     <Folder Include="Data\Model\" />
-    <Folder Include="Data\Repository\" />
   </ItemGroup>
 
   <ItemGroup>

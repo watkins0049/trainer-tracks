@@ -6,12 +6,10 @@ using System.Security.Claims;
 using System.Text;
 using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model.Entity;
-using TrainerTracks.Web.Data.Repository;
 using System.Security.Cryptography;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
-using System.Linq;
 
 namespace TrainerTracks.Web.Services
 {

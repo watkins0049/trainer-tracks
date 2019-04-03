@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model;
-using TrainerTracks.Web.Data.Repository;
 using TrainerTracks.Web.Services;
 
 namespace TrainerTracks
@@ -41,7 +40,6 @@ namespace TrainerTracks
 
             services.AddScoped<IAccountContext, AccountContext>();
             services.AddScoped<IAccountServices, AccountServices>();
-            services.AddScoped<ITrainerRepository, TrainerRepository>();
 
             #endregion Services interface coupling
 

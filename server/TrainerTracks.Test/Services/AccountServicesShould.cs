@@ -8,11 +8,9 @@ using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using TrainerTracks.Web.Data.Repository;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
-using System.Linq;
 
 namespace TrainerTracks.Test.Services
 {

@@ -28,9 +28,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Services\UserDao.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\TrainerTracks\TrainerTracks.Web.csproj" />
   </ItemGroup>
 </Project>
