@@ -1,7 +1,8 @@
 CREATE TABLE "tt"."TrainerClients" (
-  "ClientId" int PRIMARY KEY,
-  "TrainerId" int
+  "ClientEmailAddress" varchar,
+  "TrainerEmailAddress" varchar,
+	PRIMARY KEY ("ClientEmailAddress", "TrainerEmailAddress")
 );
 
-ALTER TABLE "tt"."TrainerClients" ADD FOREIGN KEY ("TrainerId") REFERENCES "tt"."Trainer" ("TrainerId");
-ALTER TABLE "tt"."TrainerClients" ADD FOREIGN KEY ("ClientId") REFERENCES "tt"."Client" ("ClientId");
+ALTER TABLE "tt"."TrainerClients" ADD FOREIGN KEY ("TrainerEmailAddress") REFERENCES "tt"."Trainer" ("EmailAddress");
+ALTER TABLE "tt"."TrainerClients" ADD FOREIGN KEY ("ClientEmailAddress") REFERENCES "tt"."Client" ("EmailAddress");

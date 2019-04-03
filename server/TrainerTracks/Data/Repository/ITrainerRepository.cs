@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using TrainerTracks.Data.Model.Entity;
 
-namespace TrainerTracks.Data.Repository
+namespace TrainerTracks.Web.Data.Repository
 {
     public interface ITrainerRepository : IRepository<Trainer, string>
     {

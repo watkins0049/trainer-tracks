@@ -1,4 +1,4 @@
-﻿using TrainerTracks.Data.Context;
+﻿using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model.Entity;
 
 namespace TrainerTracks.Web.Test.Controller.IT
@@ -9,14 +9,13 @@ namespace TrainerTracks.Web.Test.Controller.IT
         {
             dbContext.Trainer.Add(new Trainer
             {
-                TrainerId = 1,
-                EmailAddress = "nick.watkins49@gmail.com",
-                FirstName = "Nick",
-                LastName = "Watkins"
+                EmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User"
             });
             dbContext.TrainerCredentials.Add(new TrainerCredentials
             {
-                TrainerId = 1,
+                EmailAddress = "test@user.com",
                 // the hash of the SHA512 hash of "password1234"
                 Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
                 Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"

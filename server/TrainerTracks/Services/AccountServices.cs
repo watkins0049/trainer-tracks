@@ -6,25 +6,24 @@ using System.Security.Claims;
 using System.Text;
 using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model.Entity;
-using TrainerTracks.Data.Repository;
+using TrainerTracks.Web.Data.Repository;
 using System.Security.Cryptography;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
+using TrainerTracks.Web.Data.Context;
+using System.Linq;
 
 namespace TrainerTracks.Web.Services
 {
     public class AccountServices : IAccountServices
     {
-        private readonly ITrainerRepository trainerRepository;
-        private readonly ITrainerCredentialsRepository trainerCredentialsRepository;
         private readonly IOptions<TrainerTracksConfig> config;
+        private readonly IAccountContext accountContext;
 
-        public AccountServices(ITrainerRepository trainerRepository,
-            ITrainerCredentialsRepository trainerCredentialsRepository,
+        public AccountServices(IAccountContext accountContext,
             IOptions<TrainerTracksConfig> config)
         {
-            this.trainerRepository = trainerRepository;
-            this.trainerCredentialsRepository = trainerCredentialsRepository;
+            this.accountContext = accountContext;
             this.config = config;
         }
 
@@ -41,13 +40,16 @@ namespace TrainerTracks.Web.Services
 
         private List<Claim> GetTrainerClaims(UserDTO user)
         {
-            Trainer trainer = trainerRepository.GetTrainerByEmail(user.EmailAddress);
-            TrainerCredentials trainerCredentials = trainerCredentialsRepository.GetById(trainer.TrainerId);
+            TrainerCredentials trainerCredentials = accountContext.TrainerCredentials.Find(user.EmailAddress);
 
-            string hashedPassword = HashStringSHA512(user.Password);
-            if (BCrypt.Net.BCrypt.Verify(hashedPassword, trainerCredentials.Hash))
+            if (trainerCredentials != null)
             {
-                return trainer.GenerateClaims();
+                string hashedPassword = HashStringSHA512(user.Password);
+                if (BCrypt.Net.BCrypt.Verify(hashedPassword, trainerCredentials.Hash))
+                {
+                    Trainer trainer = accountContext.Trainer.Find(user.EmailAddress);
+                    return trainer.GenerateClaims();
+                }
             }
             throw new UnauthorizedAccessException("Username or password is incorrect.");
         }

@@ -9,12 +9,12 @@ namespace TrainerTracks.Data.Model.Entity
     public class TrainerClients
     {
         [Key]
-        public Int64 ClientId { get; set; }
-        public Int64 TrainerId { get; set; }
+        public string ClientEmailAddress { get; set; }
+        public string TrainerEmailAddress { get; set; }
 
-        [ForeignKey("ClientId")]
+        [ForeignKey("EmailAddress")]
         public Client Client { get; set; }
-        [ForeignKey("TrainerId")]
+        [ForeignKey("EmailAddress")]
         public Trainer Trainer { get; set; }
 
     }

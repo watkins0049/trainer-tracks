@@ -16,6 +16,7 @@ GRANT USAGE ON SCHEMA tt TO tt_app_role;
 GRANT SELECT ON TABLE tt."Trainer" TO tt_app_role;
 GRANT INSERT, DELETE, SELECT, UPDATE ON TABLE tt."Client" TO tt_app_role;
 GRANT INSERT, DELETE, SELECT, UPDATE ON TABLE tt."TrainerClients" TO tt_app_role;
+GRANT SELECT ON TABLE tt."TrainerCredentials" to tt_app_role;
 
 -- Procedure/function grants
 GRANT EXECUTE ON FUNCTION tt."GetUserLoginCredentials" TO tt_app_role;

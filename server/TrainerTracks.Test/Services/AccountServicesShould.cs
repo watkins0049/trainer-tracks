@@ -8,23 +8,23 @@ using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using TrainerTracks.Data.Repository;
+using TrainerTracks.Web.Data.Repository;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
+using TrainerTracks.Web.Data.Context;
+using System.Linq;
 
 namespace TrainerTracks.Test.Services
 {
     public class AccountServicesShould
     {
-        private readonly Mock<ITrainerRepository> trainerRepositoryMock = new Mock<ITrainerRepository>();
-        private readonly Mock<ITrainerCredentialsRepository> trainerCredentialsRepositoryMock = new Mock<ITrainerCredentialsRepository>();
+        private readonly Mock<IAccountContext> accountContextMock = new Mock<IAccountContext>();
         private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private readonly AccountServices accountServices;
 
         public AccountServicesShould()
         {
-            accountServices = new AccountServices(trainerRepositoryMock.Object,
-                trainerCredentialsRepositoryMock.Object,
+            accountServices = new AccountServices(accountContextMock.Object,
                 configMock.Object);
         }
 
@@ -49,23 +49,22 @@ namespace TrainerTracks.Test.Services
 
             // WHEN the user is correctly authenticated
             // AND the user's login information is returned from the database
-            Trainer mockTrainer = new Trainer
-            {
-                TrainerId = 1,
-                EmailAddress = "test@user.com",
-                FirstName = "Test",
-                LastName = "User"
-            };
-            trainerRepositoryMock.Setup(t => t.GetTrainerByEmail(mockTrainer.EmailAddress)).Returns(mockTrainer);
-
             TrainerCredentials mockTrainerCredentials = new TrainerCredentials
             {
-                TrainerId = 1,
+                EmailAddress = "test@user.com",
                 // the hash of the SHA512 hash of "password1234"
                 Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
                 Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
             };
-            trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
+            accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns(mockTrainerCredentials);
+
+            Trainer mockTrainer = new Trainer
+            {
+                EmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User"
+            };
+            accountContextMock.Setup(a => a.Trainer.Find(mockTrainer.EmailAddress)).Returns(mockTrainer);
 
             configMock.Setup(c => c.Value.JwtKey).Returns("fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
 
@@ -77,8 +76,7 @@ namespace TrainerTracks.Test.Services
             List<Claim> claims = new List<Claim> {
                 new Claim(ClaimTypes.Email, "test@user.com"),
                 new Claim(ClaimTypes.Name, "Test User"),
-                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString()),
-                new Claim("TrainerId", "1")
+                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString())
             };
 
             for (int i = 0; i < claims.Count; i++)
@@ -111,28 +109,47 @@ namespace TrainerTracks.Test.Services
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 
             // WHEN a user is not correctly authenticated
-            Trainer mockTrainer = new Trainer
-            {
-                TrainerId = 1,
-                EmailAddress = "test@user.com",
-                FirstName = "Test",
-                LastName = "User"
-            };
-            trainerRepositoryMock.Setup(t => t.GetTrainerByEmail(mockTrainer.EmailAddress)).Returns(mockTrainer);
-
             TrainerCredentials mockTrainerCredentials = new TrainerCredentials
             {
-                TrainerId = 1,
+                EmailAddress = "test@user.com",
                 // NOTE: the hash should be "$2b$10$sCfS.t4SiS21G9rhNcqKue/PkEiitv/OfB0DojqdkMQneiUQw0l06"
                 // the hash of the SHA512 hash of "password1234"
                 Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
                 Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
             };
-            trainerCredentialsRepositoryMock.Setup(c => c.GetById(mockTrainer.TrainerId)).Returns(mockTrainerCredentials);
+            accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns(mockTrainerCredentials);
 
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));
             // AND ensure the message reads "Username or password is incorrect."
+            Assert.Equal("Username or password is incorrect.", mockException.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserDTO with an e-mail address not found in the database
+        /// WHEN a user's credentials are validated
+        /// AND the user is not found in the database
+        /// THEN an UnauthorizedAccessException is thrown
+        /// AND the message reads "Username or password is incorrect."
+        /// </summary>
+        [Fact]
+        public void ThrowAnUnauthorizedAccessExceptionWhenAUserIsNotFoundInDatabase()
+        {
+            // GIVEN a UserDTO with an e-mail address not found in the database
+            UserDTO user = new UserDTO
+            {
+                EmailAddress = "test@user.com",
+                Password = "Password1234"
+            };
+
+            // WHEN a user's credentials are validated
+            // AND the user is not found in the database
+            accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns((TrainerCredentials)null);
+
+            // THEN ensure an UnauthorizedAccessException is thrown
+            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));
+            // AND ensure the message reads "Username or password is incorrect."
+            UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
             Assert.Equal("Username or password is incorrect.", mockException.Message);
         }
     }

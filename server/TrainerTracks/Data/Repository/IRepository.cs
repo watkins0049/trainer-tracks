@@ -1,5 +1,5 @@
 ﻿using System;
-namespace TrainerTracks.Data.Repository
+namespace TrainerTracks.Web.Data.Repository
 {
     public interface IRepository<TEntity, in TKey> where TEntity : class
     {

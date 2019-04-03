@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using TrainerTracks.Data.Context;
+using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model.Entity;
 
-namespace TrainerTracks.Data.Repository
+namespace TrainerTracks.Web.Data.Repository
 {
     public class TrainerRepository : ITrainerRepository
     {

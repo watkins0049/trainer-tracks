@@ -1,6 +1,5 @@
 CREATE TABLE "tt"."Trainer" (
-  "TrainerId" serial PRIMARY KEY,
-  "EmailAddress" varchar,
+  "EmailAddress" varchar PRIMARY KEY,
   "FirstName" varchar,
   "LastName" varchar,
   "LastLoginDate" timestamp

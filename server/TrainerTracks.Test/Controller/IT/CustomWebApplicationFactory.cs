@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using TrainerTracks.Data.Context;
+using TrainerTracks.Web.Data.Context;
 
 namespace TrainerTracks.Web.Test.Controller.IT
 {

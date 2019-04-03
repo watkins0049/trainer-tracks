@@ -7,9 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using TrainerTracks.Data.Context;
+using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model;
-using TrainerTracks.Data.Repository;
+using TrainerTracks.Web.Data.Repository;
 using TrainerTracks.Web.Services;
 
 namespace TrainerTracks
@@ -39,9 +39,9 @@ namespace TrainerTracks
         {
             #region Services interface coupling
 
+            services.AddScoped<IAccountContext, AccountContext>();
             services.AddScoped<IAccountServices, AccountServices>();
             services.AddScoped<ITrainerRepository, TrainerRepository>();
-            services.AddScoped<ITrainerCredentialsRepository, TrainerCredentialsRepository>();
 
             #endregion Services interface coupling
 

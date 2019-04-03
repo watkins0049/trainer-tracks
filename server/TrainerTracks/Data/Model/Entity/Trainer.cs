@@ -9,9 +9,8 @@ namespace TrainerTracks.Data.Model.Entity
     public class Trainer
     {
         [Key]
-        public long TrainerId { get; set; }
-
         public string EmailAddress { get; set; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
@@ -22,8 +21,7 @@ namespace TrainerTracks.Data.Model.Entity
             {
                 new Claim(ClaimTypes.Email, EmailAddress),
                 new Claim(ClaimTypes.Name, FirstName + " " + LastName),
-                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString()),
-                new Claim("TrainerId", TrainerId.ToString())
+                new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString())
             };
 
             return result;

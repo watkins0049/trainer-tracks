@@ -22,7 +22,7 @@ namespace TrainerTracks.Web.Test.Controller.IT
         {
             UserDTO user = new UserDTO
             {
-                EmailAddress = "nick.watkins49@gmail.com",
+                EmailAddress = "test@user.com",
                 Password = "password1234"
             };
             string jsonInString = JsonConvert.SerializeObject(user);
@@ -34,7 +34,7 @@ namespace TrainerTracks.Web.Test.Controller.IT
             string stringResponse = await response.Content.ReadAsStringAsync();
             UserClaimsDTO userClaims = JsonConvert.DeserializeObject<UserClaimsDTO>(stringResponse, new UserClaimsDtoJsonConverter());
 
-            Assert.Equal(4, userClaims.Claims.Count);
+            Assert.Equal(3, userClaims.Claims.Count);
             Assert.NotNull(userClaims.Token);
         }
     }

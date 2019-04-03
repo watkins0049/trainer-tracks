@@ -6,9 +6,9 @@ using System.Data;
 using System.Linq;
 using TrainerTracks.Data.Model.Entity;
 
-namespace TrainerTracks.Data.Context
+namespace TrainerTracks.Web.Data.Context
 {
-    public class AccountContext : DbContext
+    public class AccountContext : DbContext, IAccountContext
     {
         public AccountContext(DbContextOptions<AccountContext> options)
             : base(options)
@@ -16,7 +16,6 @@ namespace TrainerTracks.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //Configure default schema
             modelBuilder.HasDefaultSchema("tt");
         }
         
