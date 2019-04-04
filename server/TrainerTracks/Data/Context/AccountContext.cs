@@ -16,9 +16,5 @@ namespace TrainerTracks.Web.Data.Context
         
         public DbSet<Trainer> Trainer { get; set; }
         public DbSet<TrainerCredentials> TrainerCredentials { get; set; }
-
-        // TODO: remove these...
-        public DbSet<Client> Client { get; set; }
-        public DbSet<TrainerClients> TrainerClients { get; set; }
     }
 }
