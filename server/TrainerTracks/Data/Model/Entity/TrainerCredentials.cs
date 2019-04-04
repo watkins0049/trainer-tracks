@@ -8,7 +8,7 @@ namespace TrainerTracks.Data.Model.Entity
     public class TrainerCredentials
     {
         [Key]
-        public string EmailAddress {get;set;}
+        public string EmailAddress { get; set; }
 
         public string Hash { get; set; }
         public string Salt { get; set; }
@@ -17,7 +17,6 @@ namespace TrainerTracks.Data.Model.Entity
         {
             string hashedPassword = HashStringSHA512(password);
             return BCrypt.Net.BCrypt.Verify(hashedPassword, Hash);
-            
         }
 
         // taken from https://stackoverflow.com/questions/11367727/how-can-i-sha512-a-string-in-c

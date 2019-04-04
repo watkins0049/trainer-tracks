@@ -1,5 +1,4 @@
-﻿using System;
-using TrainerTracks.Data.Model.Entity;
+﻿using TrainerTracks.Data.Model.Entity;
 using Xunit;
 
 namespace TrainerTracks.Web.Test.Data.Model.Entity

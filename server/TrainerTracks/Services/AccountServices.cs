@@ -6,7 +6,6 @@ using System.Security.Claims;
 using System.Text;
 using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model.Entity;
-using System.Security.Cryptography;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
@@ -40,12 +39,9 @@ namespace TrainerTracks.Web.Services
         {
             TrainerCredentials trainerCredentials = accountContext.TrainerCredentials.Find(user.EmailAddress);
 
-            if (trainerCredentials != null)
+            if (trainerCredentials != null && trainerCredentials.IsTrainerAuthorized(user.Password))
             {
-                if (trainerCredentials.IsTrainerAuthorized(user.Password))
-                {
-                    return accountContext.Trainer.Find(user.EmailAddress).GenerateClaims();
-                }
+                return accountContext.Trainer.Find(user.EmailAddress).GenerateClaims();
             }
             throw new UnauthorizedAccessException("Username or password is incorrect.");
         }
@@ -53,9 +49,7 @@ namespace TrainerTracks.Web.Services
         private string GenerateSecurityToken(List<Claim> claims)
         {
             ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
-            ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
 
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
             byte[] key = Encoding.ASCII.GetBytes(config.Value.JwtKey);
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -63,9 +57,18 @@ namespace TrainerTracks.Web.Services
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
-            SecurityToken token = tokenHandler.CreateToken(tokenDescriptor);
 
-            return tokenHandler.WriteToken(token);
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+            return tokenHandler.CreateAndWriteToken(tokenDescriptor);
+        }
+    }
+
+    internal static class JwtSecurityTokenHandlerExtensions
+    {
+        internal static string CreateAndWriteToken(this JwtSecurityTokenHandler handler, SecurityTokenDescriptor descriptor)
+        {
+            SecurityToken token = handler.CreateToken(descriptor);
+            return handler.WriteToken(token);
         }
     }
 }
