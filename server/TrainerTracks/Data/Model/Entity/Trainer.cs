@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using TrainerTracks.Data.Enums;
+using TrainerTracks.Web.Data.Model;
 
 namespace TrainerTracks.Data.Model.Entity
 {
@@ -15,16 +16,16 @@ namespace TrainerTracks.Data.Model.Entity
         public string LastName { get; set; }
         public DateTime? LastLoginDate { get; set; }
 
-        public List<Claim> GenerateClaims()
+        public Claims GenerateClaims()
         {
-            List<Claim> result = new List<Claim>
+            List<Claim> claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, EmailAddress),
                 new Claim(ClaimTypes.Name, FirstName + " " + LastName),
                 new Claim(ClaimTypes.Role, UserRole.TRAINER.ToString())
             };
 
-            return result;
+            return new Claims(claims);
         }
     }
 }

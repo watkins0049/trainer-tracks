@@ -18,6 +18,7 @@ namespace TrainerTracks.Test.Services
     {
         private const string PASSWORD1234_HASH = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.";
         private const string PASSWORD1234_SALT = "$2b$10$sCfS.t4SiS21G9rhNcqKue";
+        private const string JWT_KEY = "fc5a6707-634b-4776-ba70-6f6cc45fbcfc";
 
         private readonly Mock<IAccountContext> accountContextMock = new Mock<IAccountContext>();
         private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
@@ -66,9 +67,9 @@ namespace TrainerTracks.Test.Services
             };
             accountContextMock.Setup(a => a.Trainer.Find(mockTrainer.EmailAddress)).Returns(mockTrainer);
 
-            configMock.Setup(c => c.Value.JwtKey).Returns("fc5a6707-634b-4776-ba70-6f6cc45fbcfc");
+            configMock.Setup(c => c.Value.JwtKey).Returns(JWT_KEY);
 
-            UserClaimsDTO userClaims = accountServices.SetupUserClaims(user);
+            UserClaimsDTO userClaims = accountServices.AuthorizeTrainer(user);
 
             // THEN return a UserClaimsDTO containing an e-mail claim with the
             // user's e-mail, a name claim with the user's full name, a role claim
@@ -119,7 +120,7 @@ namespace TrainerTracks.Test.Services
             accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns(mockTrainerCredentials);
 
             // THEN ensure an UnauthorizedAccessException is thrown
-            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));
+            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.AuthorizeTrainer(user));
             // AND ensure the message reads "Username or password is incorrect."
             Assert.Equal("Username or password is incorrect.", mockException.Message);
         }
@@ -146,7 +147,7 @@ namespace TrainerTracks.Test.Services
             accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns((TrainerCredentials)null);
 
             // THEN ensure an UnauthorizedAccessException is thrown
-            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.SetupUserClaims(user));
+            UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.AuthorizeTrainer(user));
             // AND ensure the message reads "Username or password is incorrect."
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
             Assert.Equal("Username or password is incorrect.", mockException.Message);

@@ -23,7 +23,7 @@ namespace TrainerTracks.Web.Controllers
         [HttpPost("login")]
         public UserClaimsDTO Login([FromBody] UserDTO user)
         {
-            return accountServices.SetupUserClaims(user);
+            return accountServices.AuthorizeTrainer(user);
         }
     }
 }
