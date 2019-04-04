@@ -1,47 +1,40 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using TrainerTracks.Data.Model.Entity;
+﻿using System;
+using TrainerTracks.Data.Model.DTO.Account;
+using TrainerTracks.Data.Model;
+using Microsoft.Extensions.Options;
+using TrainerTracks.Web.Data.Context;
+using TrainerTracks.Web.Data.Model.Entity;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 
-namespace TrainerTracks.Services
+namespace TrainerTracks.Web.Services
 {
-    public class AccountServices
+    public class AccountServices : IAccountServices
     {
+        private readonly IOptions<TrainerTracksConfig> config;
+        private readonly IAccountContext accountContext;
 
-        public static List<Claim> SetupClaims(Trainer user)
+        public AccountServices(IAccountContext accountContext,
+            IOptions<TrainerTracksConfig> config)
         {
-            List<Claim> result = new List<Claim>();
-
-            result.Add(new Claim(ClaimTypes.Email, user.EmailAddress));
-            result.Add(new Claim(ClaimTypes.Name, user.FirstName + " " + user.LastName));
-            result.Add(new Claim(ClaimTypes.Role, "Trainer"));
-            result.Add(new Claim("TrainerId", user.TrainerId.ToString()));
-
-            return result;
+            this.accountContext = accountContext;
+            this.config = config;
         }
 
-        public static string GenerateSecurityToken(List<Claim> claims, string jwtEncoding)
+        public UserClaimsDTO AuthorizeTrainer(UserDTO user)
         {
-            ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, "TrainerTracks");
-            ClaimsPrincipal principal = new ClaimsPrincipal(claimsIdentity);
+            Claims claims = GetTrainerClaims(user);
+            return claims.GenerateUserClaimsDTO(config.Value.JwtKey);
+        }
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(jwtEncoding);
-            var tokenDescriptor = new SecurityTokenDescriptor
+        private Claims GetTrainerClaims(UserDTO user)
+        {
+            TrainerCredentials trainerCredentials = accountContext.TrainerCredentials.Find(user.EmailAddress);
+
+            if (trainerCredentials != null && trainerCredentials.IsTrainerAuthorized(user.Password))
             {
-                Subject = claimsIdentity,
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var tokenString = tokenHandler.WriteToken(token);
-
-            return tokenString;
+                return accountContext.Trainer.Find(user.EmailAddress).GenerateClaims();
+            }
+            throw new UnauthorizedAccessException("Username or password is incorrect.");
         }
-
     }
 }

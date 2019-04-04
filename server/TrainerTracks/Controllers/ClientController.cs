@@ -2,18 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
-using TrainerTracks.Data.Context;
+using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model;
 using TrainerTracks.Data.Model.DTO.Forms;
-using TrainerTracks.Data.Model.Entity;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 using TrainerTracks.Security;
 
-namespace TrainerTracks.Controllers
+namespace TrainerTracks.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,9 +20,9 @@ namespace TrainerTracks.Controllers
     public class ClientController : ControllerBase
     {
         private readonly IOptions<TrainerTracksConfig> config;
-        private readonly TrainerTracksContext context;
+        private readonly AccountContext context;
 
-        public ClientController(IOptions<TrainerTracksConfig> config, TrainerTracksContext context)
+        public ClientController(IOptions<TrainerTracksConfig> config, AccountContext context)
         {
             this.config = config;
             this.context = context;
@@ -33,22 +32,22 @@ namespace TrainerTracks.Controllers
         public IEnumerable<TrainerClients> SearchClients(string firstName, string lastName)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
-            var trainerId = identity.FindFirst("TrainerId").Value;
+            var trainerEmailAddress = identity.FindFirst("EmailAddress").Value;
 
             var results = context.TrainerClients
                 .Include(tc => tc.Client)
                 .AsEnumerable()
                 .Where(c => (firstName == null || c.Client.FirstName.ToUpper().Contains(firstName.ToUpper())) &&
                     (lastName == null || c.Client.LastName.ToUpper().Contains(lastName.ToUpper())) &&
-                    c.TrainerId.Equals(Convert.ToInt64(trainerId)));
+                    c.TrainerEmailAddress.Equals(trainerEmailAddress));
 
             return results;
         }
 
         [HttpGet("clientDetails")]
-        public Client ClientDetails(int clientId)
+        public Client ClientDetails(string clientEmailAddress)
         {
-            var results = context.Client.Where(c => c.ClientId == clientId).FirstOrDefault();
+            var results = context.Client.Where(c => c.EmailAddress.Equals(clientEmailAddress)).FirstOrDefault();
             return results;
         }
 

@@ -22,7 +22,7 @@ export class LoginComponent {
 
         this.httpClient.post('account/login', { emailAddress: this.user.email, password: this.user.password })
             .subscribe(res => {
-                let json = res.json();
+                const json = res.json();
                 localStorage.setItem('TrainerTracksCookie', json['token']);
                 this.router.navigateByUrl('/trainer');
             });

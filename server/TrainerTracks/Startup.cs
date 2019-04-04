@@ -7,8 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using TrainerTracks.Data.Context;
+using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model;
+using TrainerTracks.Web.Services;
 
 namespace TrainerTracks
 {
@@ -35,10 +36,17 @@ namespace TrainerTracks
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            #region Services interface coupling
+
+            services.AddScoped<IAccountContext, AccountContext>();
+            services.AddScoped<IAccountServices, AccountServices>();
+
+            #endregion Services interface coupling
+
             #region JWT setup
 
-            var jwtKey = this.Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
-            var key = Encoding.ASCII.GetBytes(jwtKey);
+            string jwtKey = Configuration.GetSection("TrainerTracksConfig").GetValue<string>("JwtKey");
+            byte[] key = Encoding.ASCII.GetBytes(jwtKey);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -70,14 +78,14 @@ namespace TrainerTracks
             // Add functionality to inject IOptions<T>
             services.AddOptions();
             // Add our Config object so it can be injected. Reads from the TrainerTracksConfig section of the appsettings.json file.
-            services.Configure<TrainerTracksConfig>(this.Configuration.GetSection("TrainerTracksConfig"));
+            services.Configure<TrainerTracksConfig>(Configuration.GetSection("TrainerTracksConfig"));
 
             #endregion Config file setup
 
             #region DB context setup
 
-            var connection = Configuration.GetConnectionString("TrainerTracks");
-            services.AddDbContext<TrainerTracksContext>(options => options.UseNpgsql(connection));
+            string connection = Configuration.GetConnectionString("TrainerTracks");
+            services.AddDbContext<AccountContext>(options => options.UseNpgsql(connection));
 
             #endregion DB context setup
         }
