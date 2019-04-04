@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace TrainerTracks.Data.Model.Entity
+namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
     public class TrainerCredentials
     {

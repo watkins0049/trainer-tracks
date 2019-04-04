@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
 using TrainerTracks.Data.Enums;
 using TrainerTracks.Data.Model.DTO.Account;
-using TrainerTracks.Web.Data.Model;
+using TrainerTracks.Web.Data.Model.Entity;
 using Xunit;
 
 namespace TrainerTracks.Web.Test.Data.Model

@@ -1,5 +1,5 @@
 ﻿using TrainerTracks.Web.Data.Context;
-using TrainerTracks.Data.Model.Entity;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 
 namespace TrainerTracks.Web.Test.Controller.IT
 {

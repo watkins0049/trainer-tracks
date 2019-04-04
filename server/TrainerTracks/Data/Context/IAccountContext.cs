@@ -1,6 +1,5 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using TrainerTracks.Data.Model.Entity;
+﻿using Microsoft.EntityFrameworkCore;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 
 namespace TrainerTracks.Web.Data.Context
 {

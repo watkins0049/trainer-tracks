@@ -4,13 +4,13 @@ using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
-using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Enums;
 using System;
 using System.IdentityModel.Tokens.Jwt;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 
 namespace TrainerTracks.Test.Services
 {

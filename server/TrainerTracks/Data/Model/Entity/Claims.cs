@@ -6,7 +6,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using TrainerTracks.Data.Model.DTO.Account;
 
-namespace TrainerTracks.Web.Data.Model
+namespace TrainerTracks.Web.Data.Model.Entity
 {
     public class Claims
     {

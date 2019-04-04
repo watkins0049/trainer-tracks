@@ -1,10 +1,10 @@
 ﻿using System;
 using TrainerTracks.Data.Model.DTO.Account;
-using TrainerTracks.Data.Model.Entity;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
-using TrainerTracks.Web.Data.Model;
+using TrainerTracks.Web.Data.Model.Entity;
+using TrainerTracks.Data.Model.Entity.DBEntities;
 
 namespace TrainerTracks.Web.Services
 {

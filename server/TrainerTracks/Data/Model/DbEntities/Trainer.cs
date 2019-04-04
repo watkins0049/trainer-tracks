@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using TrainerTracks.Data.Enums;
-using TrainerTracks.Web.Data.Model;
+using TrainerTracks.Web.Data.Model.Entity;
 
-namespace TrainerTracks.Data.Model.Entity
+namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
     public class Trainer
     {
