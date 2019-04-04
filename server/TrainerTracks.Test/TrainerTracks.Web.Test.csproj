@@ -21,6 +21,9 @@
     <Folder Include="Controller\" />
     <Folder Include="Services\" />
     <Folder Include="Controller\IT\" />
+    <Folder Include="Data\" />
+    <Folder Include="Data\Model\" />
+    <Folder Include="Data\Model\Entity\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrainerTracks\TrainerTracks.Web.csproj" />

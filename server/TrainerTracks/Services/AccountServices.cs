@@ -42,25 +42,12 @@ namespace TrainerTracks.Web.Services
 
             if (trainerCredentials != null)
             {
-                string hashedPassword = HashStringSHA512(user.Password);
-                if (BCrypt.Net.BCrypt.Verify(hashedPassword, trainerCredentials.Hash))
+                if (trainerCredentials.IsTrainerAuthorized(user.Password))
                 {
-                    Trainer trainer = accountContext.Trainer.Find(user.EmailAddress);
-                    return trainer.GenerateClaims();
+                    return accountContext.Trainer.Find(user.EmailAddress).GenerateClaims();
                 }
             }
             throw new UnauthorizedAccessException("Username or password is incorrect.");
-        }
-
-        // taken from https://stackoverflow.com/questions/11367727/how-can-i-sha512-a-string-in-c
-        private string HashStringSHA512(string input)
-        {
-            byte[] bytes = Encoding.UTF8.GetBytes(input);
-            using (SHA512 hash = SHA512.Create())
-            {
-                byte[] hashedInputBytes = hash.ComputeHash(bytes);
-                return BitConverter.ToString(hashedInputBytes).Replace("-", "");
-            }
         }
 
         private string GenerateSecurityToken(List<Claim> claims)

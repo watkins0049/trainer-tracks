@@ -16,6 +16,9 @@ namespace TrainerTracks.Test.Services
 {
     public class AccountServicesShould
     {
+        private const string PASSWORD1234_HASH = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.";
+        private const string PASSWORD1234_SALT = "$2b$10$sCfS.t4SiS21G9rhNcqKue";
+
         private readonly Mock<IAccountContext> accountContextMock = new Mock<IAccountContext>();
         private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private readonly AccountServices accountServices;
@@ -50,9 +53,8 @@ namespace TrainerTracks.Test.Services
             TrainerCredentials mockTrainerCredentials = new TrainerCredentials
             {
                 EmailAddress = "test@user.com",
-                // the hash of the SHA512 hash of "password1234"
-                Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
-                Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
+                Hash = PASSWORD1234_HASH,
+                Salt = PASSWORD1234_SALT
             };
             accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns(mockTrainerCredentials);
 
@@ -111,9 +113,8 @@ namespace TrainerTracks.Test.Services
             {
                 EmailAddress = "test@user.com",
                 // NOTE: the hash should be "$2b$10$sCfS.t4SiS21G9rhNcqKue/PkEiitv/OfB0DojqdkMQneiUQw0l06"
-                // the hash of the SHA512 hash of "password1234"
-                Hash = "$2b$10$sCfS.t4SiS21G9rhNcqKuemSpI8sU/F6z59x.aZimKouY2qLFp69.",
-                Salt = "$2b$10$sCfS.t4SiS21G9rhNcqKue"
+                Hash = PASSWORD1234_HASH,
+                Salt = PASSWORD1234_SALT
             };
             accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns(mockTrainerCredentials);
 
