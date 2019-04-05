@@ -199,12 +199,12 @@ namespace TrainerTracks.Test.Services
 
         /// <summary>
         /// GIVEN a UserSignupDTO without a valid email address
-        /// WHEN a user is attempting to sign up
+        /// WHEN a user is attempting to setup an account
         /// THEN throw an FormatException
         /// AND ensure the exception reads "The specified string is not in the form required for an e-mail address."
         /// </summary>
         [Fact]
-        public void ThrowArgumentExceptionWhenEmailAddressNotEmail()
+        public void ThrowFormatExceptionWhenEmailAddressNotValid()
         {
             // GIVEN a UserSignupDTO without a valid email address
             UserSignupDTO user = new UserSignupDTO
@@ -215,11 +215,43 @@ namespace TrainerTracks.Test.Services
                 Password = "Password1234"
             };
 
-            // WHEN a user is attempting to sign up
+            // WHEN a user is attempting setup an account
             // THEN throw an ArgumentException
-            // AND ensure the exception reads "Invalid email address."
             FormatException ex = Assert.Throws<FormatException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the exception reads "Invalid email address."
             Assert.Equal("The specified string is not in the form required for an e-mail address.", ex.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO without a valid password
+        /// WHEN a user is attempting to setup an account
+        /// THEN throw an ArgumentException
+        /// AND ensure the exception reads "Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number."
+        /// </summary>
+        [Theory]
+        [InlineData(null)]
+        [InlineData("pass")]
+        [InlineData("password")]
+        [InlineData("PASSWORD")]
+        [InlineData("Password")]
+        [InlineData("012345678")]
+        public void ThrowArgumentExceptionWhenPasswordNotValid(string password)
+        {
+            // GIVEN a UserSignupDTO without a valid password
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User",
+                Password = password
+            };
+
+            // WHEN a user is attempting to setup an account
+            // THEN throw an ArgumentException
+            ArgumentException ex = Assert.Throws<ArgumentException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the exception reads "Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number."
+            Assert.Equal("Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number.",
+                ex.Message);
         }
     }
 }

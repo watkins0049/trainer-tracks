@@ -56,7 +56,7 @@ namespace TrainerTracks.Web.Services
                 LastName = user.LastName
             };
 
-            TrainerCredentials trainerCredentials = TrainerCredentials.BuildNewUser(user);
+            TrainerCredentials trainerCredentials = TrainerCredentials.BuildNewTrainerCredentials(user);
 
             accountContext.Trainer.Add(trainer);
             accountContext.TrainerCredentials.Add(trainerCredentials);
