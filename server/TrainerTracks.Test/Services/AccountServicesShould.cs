@@ -24,10 +24,18 @@ namespace TrainerTracks.Test.Services
         private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
         private readonly IAccountServices accountServices;
 
+        private TrainerCredentials trainerCredentialsCapture;
+        private Trainer trainerCapture;
+
         public AccountServicesShould()
         {
             accountServices = new AccountServices(accountContextMock.Object,
                 configMock.Object);
+
+            accountContextMock.Setup(a => a.TrainerCredentials.Add(It.IsAny<TrainerCredentials>()))
+                .Callback<TrainerCredentials>(r => trainerCredentialsCapture = r);
+            accountContextMock.Setup(a => a.Trainer.Add(It.IsAny<Trainer>()))
+                .Callback<Trainer>(t => trainerCapture = t);
         }
 
         /// <summary>
@@ -174,13 +182,6 @@ namespace TrainerTracks.Test.Services
             };
 
             // WHEN a trainer signs up for an account
-            TrainerCredentials trainerCredentialsCapture = null;
-            accountContextMock.Setup(a => a.TrainerCredentials.Add(It.IsAny<TrainerCredentials>()))
-                .Callback<TrainerCredentials>(r => trainerCredentialsCapture = r);
-            Trainer trainerCapture = null;
-            accountContextMock.Setup(a => a.Trainer.Add(It.IsAny<Trainer>()))
-                .Callback<Trainer>(t => trainerCapture = t);
-
             accountServices.SetupNewTrainer(user);
 
             // THEN new Trainer with the inputted email address, first name, and last name is added
@@ -251,6 +252,38 @@ namespace TrainerTracks.Test.Services
             ArgumentException ex = Assert.Throws<ArgumentException>(() => accountServices.SetupNewTrainer(user));
             // AND ensure the exception reads "Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number."
             Assert.Equal("Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number.",
+                ex.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO without a first name or last name
+        /// WHEN a user is attempting to setup an account
+        /// THEN throw an ArgumentException
+        /// AND ensure the exception reads "First name and last name are required."
+        /// </summary>
+        [Theory]
+        [InlineData("first", "")]
+        [InlineData("", "last")]
+        [InlineData(" ", "last")]
+        [InlineData("first", " ")]
+        [InlineData(" ", " ")]
+        [InlineData(null, null)]
+        public void ThrowArgumentExceptionWhenNameIsBlankOrNull(string firstName, string lastName)
+        {
+            // GIVEN a UserSignupDTO without a first name or last name
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                FirstName = firstName,
+                LastName = lastName,
+                Password = "Password1234"
+            };
+
+            // WHEN a user is attempting to setup an account
+            // THEN throw an ArgumentException
+            ArgumentException ex = Assert.Throws<ArgumentException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the exception reads "First name and last name are required."
+            Assert.Equal("First name and last name are required.",
                 ex.Message);
         }
     }

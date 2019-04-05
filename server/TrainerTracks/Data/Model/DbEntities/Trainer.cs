@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Mail;
 using System.Security.Claims;
 using TrainerTracks.Data.Enums;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 using TrainerTracks.Web.Data.Model.Entity;
 
 namespace TrainerTracks.Data.Model.Entity.DBEntities
@@ -26,6 +28,25 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             };
 
             return new Claims(claims);
+        }
+
+        public static Trainer BuildTrainerFromUserSignup(UserSignupDTO user)
+        {
+            // No need for a regex; this automagically validates the user's
+            // email address and throws a FormatException if it's not valid
+            MailAddress m = new MailAddress(user.EmailAddress);
+
+            if (string.IsNullOrWhiteSpace(user.LastName) || string.IsNullOrWhiteSpace(user.FirstName))
+            {
+                throw new ArgumentException("First name and last name are required.");
+            }
+
+            return new Trainer
+            {
+                EmailAddress = user.EmailAddress,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
         }
     }
 }

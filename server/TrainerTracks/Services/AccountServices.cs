@@ -46,20 +46,12 @@ namespace TrainerTracks.Web.Services
 
         public void SetupNewTrainer(UserSignupDTO user)
         {
-            // No need for a regex; this automagically validates the user's
-            // email address and throws a FormatException if it's not valid
-            MailAddress m = new MailAddress(user.EmailAddress);
-            Trainer trainer = new Trainer
-            {
-                EmailAddress = user.EmailAddress,
-                FirstName = user.FirstName,
-                LastName = user.LastName
-            };
-
-            TrainerCredentials trainerCredentials = TrainerCredentials.BuildNewTrainerCredentials(user);
-
+            Trainer trainer = Trainer.BuildTrainerFromUserSignup(user);
             accountContext.Trainer.Add(trainer);
+
+            TrainerCredentials trainerCredentials = TrainerCredentials.BuildTrainerCredentialsFromUserSignup(user);
             accountContext.TrainerCredentials.Add(trainerCredentials);
+
             accountContext.SaveChanges();
         }
 

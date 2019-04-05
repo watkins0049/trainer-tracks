@@ -21,7 +21,7 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             return BCrypt.Net.BCrypt.Verify(hashedPassword, Hash);
         }
 
-        public static TrainerCredentials BuildNewTrainerCredentials(UserSignupDTO user)
+        public static TrainerCredentials BuildTrainerCredentialsFromUserSignup(UserSignupDTO user)
         {
             TrainerCredentials trainerCredentials =  new TrainerCredentials
             {
