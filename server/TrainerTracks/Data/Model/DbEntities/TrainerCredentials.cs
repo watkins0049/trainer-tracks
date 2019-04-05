@@ -27,7 +27,7 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             {
                 EmailAddress = user.EmailAddress
             };
-            trainerCredentials.Salt = BCrypt.Net.BCrypt.GenerateSalt();
+            trainerCredentials.Salt = BCrypt.Net.BCrypt.GenerateSalt(14);
             trainerCredentials.Hash = trainerCredentials.HashPassword(user.Password);
 
             return trainerCredentials;
@@ -61,18 +61,18 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             }
 
             bool is8CharactersLong = password.Length >= 8;
+            bool passwordContainsOneUppercase = PasswordMeetsRequirement("(?=.*[A-Z])", password);
+            bool passwordContainsOneLowercase = PasswordMeetsRequirement("(?=.*[a-z])", password);
+            bool passwordContainsOneNumber = PasswordMeetsRequirement("(?=.*[0-9])", password);
 
-            Regex atLeastOneUppercase = new Regex("(?=.*[A-Z])");
-            bool passwordContainsOneUppercase = atLeastOneUppercase.IsMatch(password);
+            return is8CharactersLong && passwordContainsOneUppercase
+                && passwordContainsOneLowercase && passwordContainsOneNumber;
+        }
 
-            Regex atLeastOneLowercase = new Regex("(?=.*[a-z])");
-            bool passwordContainsOneLowercase = atLeastOneLowercase.IsMatch(password);
-
-            Regex atLeastOneNumber = new Regex("(?=.*[0-9])");
-            bool passwordContainsOneNumber = atLeastOneNumber.IsMatch(password);
-
-            return is8CharactersLong && passwordContainsOneUppercase && passwordContainsOneLowercase && passwordContainsOneNumber;
-
+        private bool PasswordMeetsRequirement(string requirementExpression, string password)
+        {
+            Regex requirement = new Regex(requirementExpression);
+            return requirement.IsMatch(password);
         }
     }
 }
