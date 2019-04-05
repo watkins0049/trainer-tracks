@@ -37,5 +37,22 @@ namespace TrainerTracks.Web.Test.Controller.IT
             Assert.Equal(3, userClaims.Claims.Count);
             Assert.NotNull(userClaims.Token);
         }
+
+        [Fact]
+        public async Task ReturnSuccessWhenCreatingAccount()
+        {
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test1@user.com",
+                FirstName = "Test",
+                LastName = "User",
+                Password = "Password1234"
+            };
+            string jsonInString = JsonConvert.SerializeObject(user);
+
+            HttpResponseMessage response = await httpClient.PostAsync("/api/account/signup", new StringContent(jsonInString, Encoding.UTF8, "application/json"));
+
+            response.EnsureSuccessStatusCode();
+        }
     }
 }

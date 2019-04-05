@@ -23,5 +23,12 @@ namespace TrainerTracks.Web.Controllers
         {
             return accountServices.AuthorizeTrainer(user);
         }
+
+        [AllowAnonymous]
+        [HttpPost("signup")]
+        public void Signup([FromBody] UserSignupDTO user)
+        {
+            accountServices.SetupNewTrainer(user);
+        }
     }
 }
