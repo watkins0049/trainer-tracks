@@ -1,7 +1,7 @@
 ﻿using TrainerTracks.Data.Model.Entity.DBEntities;
 using Xunit;
 
-namespace TrainerTracks.Web.Test.Data.Model.Entity
+namespace TrainerTracks.Web.Test.Data.Model.Entity.DBEntities
 {
     public class TrainerCredentialsShould
     {

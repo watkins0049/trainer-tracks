@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using TrainerTracks.Data.Model.DTO.Account;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 using Xunit;
 
 namespace TrainerTracks.Web.Test.Controller.IT
@@ -20,7 +20,7 @@ namespace TrainerTracks.Web.Test.Controller.IT
         [Fact]
         public async Task ReturnSuccessWithClaimsAndCookieToken()
         {
-            UserDTO user = new UserDTO
+            UserLoginDTO user = new UserLoginDTO
             {
                 EmailAddress = "test@user.com",
                 Password = "password1234"

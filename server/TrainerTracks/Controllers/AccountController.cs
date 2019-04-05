@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using TrainerTracks.Data.Model;
-using TrainerTracks.Data.Model.DTO.Account;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 using TrainerTracks.Web.Services;
 
 namespace TrainerTracks.Web.Controllers
@@ -21,7 +19,7 @@ namespace TrainerTracks.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public UserClaimsDTO Login([FromBody] UserDTO user)
+        public UserClaimsDTO Login([FromBody] UserLoginDTO user)
         {
             return accountServices.AuthorizeTrainer(user);
         }

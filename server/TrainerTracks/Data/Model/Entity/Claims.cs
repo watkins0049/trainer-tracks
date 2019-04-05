@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
-using TrainerTracks.Data.Model.DTO.Account;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Web.Data.Model.Entity
 {

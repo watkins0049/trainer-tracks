@@ -1,10 +1,10 @@
 ﻿using System;
-using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Web.Data.Model.Entity;
 using TrainerTracks.Data.Model.Entity.DBEntities;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Web.Services
 {
@@ -20,13 +20,15 @@ namespace TrainerTracks.Web.Services
             this.config = config;
         }
 
-        public UserClaimsDTO AuthorizeTrainer(UserDTO user)
+        #region Authorization
+
+        public UserClaimsDTO AuthorizeTrainer(UserLoginDTO user)
         {
             Claims claims = GetTrainerClaims(user);
             return claims.GenerateUserClaimsDTO(config.Value.JwtKey);
         }
 
-        private Claims GetTrainerClaims(UserDTO user)
+        private Claims GetTrainerClaims(UserLoginDTO user)
         {
             TrainerCredentials trainerCredentials = accountContext.TrainerCredentials.Find(user.EmailAddress);
 
@@ -36,5 +38,27 @@ namespace TrainerTracks.Web.Services
             }
             throw new UnauthorizedAccessException("Username or password is incorrect.");
         }
+
+        #endregion Authorization
+
+        #region New Trainer Setup
+
+        public void SetupNewTrainer(UserSignupDTO user)
+        {
+            Trainer trainer = new Trainer
+            {
+                EmailAddress = user.EmailAddress,
+                FirstName = user.FirstName,
+                LastName = user.LastName
+            };
+
+            TrainerCredentials trainerCredentials = TrainerCredentials.BuildNewUser(user);
+
+            accountContext.Trainer.Add(trainer);
+            accountContext.TrainerCredentials.Add(trainerCredentials);
+            accountContext.SaveChanges();
+        }
+
+        #endregion New Trainer Setup
     }
 }

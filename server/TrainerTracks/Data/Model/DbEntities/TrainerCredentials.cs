@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
@@ -28,6 +29,24 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
                 byte[] hashedInputBytes = hash.ComputeHash(bytes);
                 return BitConverter.ToString(hashedInputBytes).Replace("-", "");
             }
+        }
+
+        public static TrainerCredentials BuildNewUser(UserSignupDTO user)
+        {
+            TrainerCredentials trainerCredentials =  new TrainerCredentials
+            {
+                EmailAddress = user.EmailAddress
+            };
+            trainerCredentials.Salt = BCrypt.Net.BCrypt.GenerateSalt();
+            trainerCredentials.Hash = trainerCredentials.HashPassword(user.Password);
+
+            return trainerCredentials;
+        }
+
+        private string HashPassword(string password)
+        {
+            string sha512 = HashStringSHA512(password);
+            return BCrypt.Net.BCrypt.HashPassword(sha512, Salt);
         }
     }
 }

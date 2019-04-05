@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
-using TrainerTracks.Data.Model.DTO.Account;
 using TrainerTracks.Web.Services;
 using Xunit;
 using Moq;
@@ -11,6 +10,7 @@ using TrainerTracks.Data.Model;
 using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model.Entity.DBEntities;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Test.Services
 {
@@ -22,7 +22,7 @@ namespace TrainerTracks.Test.Services
 
         private readonly Mock<IAccountContext> accountContextMock = new Mock<IAccountContext>();
         private readonly Mock<IOptions<TrainerTracksConfig>> configMock = new Mock<IOptions<TrainerTracksConfig>>();
-        private readonly AccountServices accountServices;
+        private readonly IAccountServices accountServices;
 
         public AccountServicesShould()
         {
@@ -43,7 +43,7 @@ namespace TrainerTracks.Test.Services
         public void ReturnUserClaimsDTOForAuthenticatedUser()
         {
             // GIVEN a UserDTO containing a user's e-mail and password
-            UserDTO user = new UserDTO
+            UserLoginDTO user = new UserLoginDTO
             {
                 EmailAddress = "test@user.com",
                 Password = "password1234"
@@ -102,7 +102,7 @@ namespace TrainerTracks.Test.Services
         public void ThrowAnUnauthorizedAccessExceptionWhenAUserIsNotAuthenticated()
         {
             // GIVEN a UserDTO containing a user's e-mail and password
-            UserDTO user = new UserDTO
+            UserLoginDTO user = new UserLoginDTO
             {
                 EmailAddress = "test@user.com",
                 Password = "Password1234"
@@ -136,7 +136,7 @@ namespace TrainerTracks.Test.Services
         public void ThrowAnUnauthorizedAccessExceptionWhenAUserIsNotFoundInDatabase()
         {
             // GIVEN a UserDTO with an e-mail address not found in the database
-            UserDTO user = new UserDTO
+            UserLoginDTO user = new UserLoginDTO
             {
                 EmailAddress = "test@user.com",
                 Password = "Password1234"
@@ -144,13 +144,57 @@ namespace TrainerTracks.Test.Services
 
             // WHEN a user's credentials are validated
             // AND the user is not found in the database
-            accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns((TrainerCredentials)null);
+            accountContextMock.Setup(a => a.TrainerCredentials.Find(user.EmailAddress)).Returns((TrainerCredentials) null);
 
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.AuthorizeTrainer(user));
             // AND ensure the message reads "Username or password is incorrect."
             UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
             Assert.Equal("Username or password is incorrect.", mockException.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a username and password
+        /// WHEN a trainer signs up for an account
+        /// THEN new Trainer with the inputted email address, first name, and last name is added
+        /// AND a TrainerCredentials record is added
+        /// AND SaveChanges is called
+        /// AND the password can be verified by BCrypt
+        /// </summary>
+        [Fact]
+        public void InsertTrainerAndTrainerCredentialsOnSignup()
+        {
+            // GIVEN a username and password
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User",
+                Password = "Password1234"
+            };
+
+            // WHEN a trainer signs up for an account
+            TrainerCredentials trainerCredentialsCapture = null;
+            accountContextMock.Setup(a => a.TrainerCredentials.Add(It.IsAny<TrainerCredentials>()))
+                .Callback<TrainerCredentials>(r => trainerCredentialsCapture = r);
+            Trainer trainerCapture = null;
+            accountContextMock.Setup(a => a.Trainer.Add(It.IsAny<Trainer>()))
+                .Callback<Trainer>(t => trainerCapture = t);
+
+            accountServices.SetupNewTrainer(user);
+
+            // THEN new Trainer with the inputted email address, first name, and last name is added
+            Assert.Equal(user.EmailAddress, trainerCapture.EmailAddress);
+            Assert.Equal(user.FirstName, trainerCapture.FirstName);
+            Assert.Equal(user.LastName, trainerCapture.LastName);
+            accountContextMock.Verify(a => a.Trainer.Add(It.IsAny<Trainer>()), Times.Once);
+            // AND a TrainerCredentials record is added
+            accountContextMock.Verify(a => a.TrainerCredentials.Add(It.IsAny<TrainerCredentials>()), Times.Once);
+            // AND SaveChanges is called
+            accountContextMock.Verify(a => a.SaveChanges(), Times.Once);
+            // AND the password can be verified by BCrypt
+            string sha512Password1234 = "20B0747EEFCDC16FA4FB06BBF9284303645ECC3D2C43927878BD513F06853191C104AEBAE6D7FCA6291F1E296C6AF99EBF8A137CBD7A0D34F2E27B31CB4FECDB";
+            Assert.True(BCrypt.Net.BCrypt.Verify(sha512Password1234, trainerCredentialsCapture.Hash));
         }
     }
 }

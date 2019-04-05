@@ -7,5 +7,7 @@ namespace TrainerTracks.Web.Data.Context
     {
         DbSet<Trainer> Trainer { get; set; }
         DbSet<TrainerCredentials> TrainerCredentials { get; set; }
+
+        int SaveChanges();
     }
 }

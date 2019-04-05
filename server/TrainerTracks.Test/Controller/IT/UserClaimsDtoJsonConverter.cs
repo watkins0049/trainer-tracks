@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Claims;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using TrainerTracks.Data.Model.DTO.Account;
+using TrainerTracks.Web.Data.Model.DTO.Account;
 
 namespace TrainerTracks.Web.Test.Controller.IT
 {
