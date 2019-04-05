@@ -196,5 +196,30 @@ namespace TrainerTracks.Test.Services
             string sha512Password1234 = "20B0747EEFCDC16FA4FB06BBF9284303645ECC3D2C43927878BD513F06853191C104AEBAE6D7FCA6291F1E296C6AF99EBF8A137CBD7A0D34F2E27B31CB4FECDB";
             Assert.True(BCrypt.Net.BCrypt.Verify(sha512Password1234, trainerCredentialsCapture.Hash));
         }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO without a valid email address
+        /// WHEN a user is attempting to sign up
+        /// THEN throw an FormatException
+        /// AND ensure the exception reads "The specified string is not in the form required for an e-mail address."
+        /// </summary>
+        [Fact]
+        public void ThrowArgumentExceptionWhenEmailAddressNotEmail()
+        {
+            // GIVEN a UserSignupDTO without a valid email address
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "not an email",
+                FirstName = "Test",
+                LastName = "User",
+                Password = "Password1234"
+            };
+
+            // WHEN a user is attempting to sign up
+            // THEN throw an ArgumentException
+            // AND ensure the exception reads "Invalid email address."
+            FormatException ex = Assert.Throws<FormatException>(() => accountServices.SetupNewTrainer(user));
+            Assert.Equal("The specified string is not in the form required for an e-mail address.", ex.Message);
+        }
     }
 }

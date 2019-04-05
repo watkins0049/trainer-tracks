@@ -5,6 +5,7 @@ using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Web.Data.Model.Entity;
 using TrainerTracks.Data.Model.Entity.DBEntities;
 using TrainerTracks.Web.Data.Model.DTO.Account;
+using System.Net.Mail;
 
 namespace TrainerTracks.Web.Services
 {
@@ -45,6 +46,9 @@ namespace TrainerTracks.Web.Services
 
         public void SetupNewTrainer(UserSignupDTO user)
         {
+            // No need for a regex; this automagically validates the user's
+            // email address and throws a FormatException if it's not valid
+            MailAddress m = new MailAddress(user.EmailAddress);
             Trainer trainer = new Trainer
             {
                 EmailAddress = user.EmailAddress,
