@@ -1,6 +1,6 @@
-﻿namespace TrainerTracks.Data.Model.DTO.Account
+﻿namespace TrainerTracks.Web.Data.Model.DTO.Account
 {
-    public class UserDTO
+    public class UserLoginDTO
     {
         public string EmailAddress { get; set; }
         public string Password { get; set; }

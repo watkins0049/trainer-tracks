@@ -23,7 +23,7 @@
     <Folder Include="Controller\IT\" />
     <Folder Include="Data\" />
     <Folder Include="Data\Model\" />
-    <Folder Include="Data\Model\Entity\" />
+    <Folder Include="Data\Model\DbEntities\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TrainerTracks\TrainerTracks.Web.csproj" />

@@ -2,6 +2,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using TrainerTracks.Web.Data.Model.DTO.Account;
+using TrainerTracks.Web.Exceptions;
 
 namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
@@ -19,15 +22,63 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             return BCrypt.Net.BCrypt.Verify(hashedPassword, Hash);
         }
 
+        public static TrainerCredentials BuildTrainerCredentialsFromUserSignup(UserSignupDTO user)
+        {
+            TrainerCredentials trainerCredentials =  new TrainerCredentials
+            {
+                EmailAddress = user.EmailAddress
+            };
+            trainerCredentials.Salt = BCrypt.Net.BCrypt.GenerateSalt(14);
+            trainerCredentials.Hash = trainerCredentials.HashPassword(user.Password, user.ConfirmPassword);
+
+            return trainerCredentials;
+        }
+
+        private string HashPassword(string password, string confirmPassword)
+        {
+            if (IsPasswordValid(password, confirmPassword))
+            {
+                string sha512 = HashStringSHA512(password);
+                return BCrypt.Net.BCrypt.HashPassword(sha512, Salt);
+            }
+            throw new ArgumentException("Password must be at least 8 characters, have 1 uppercase character, 1 lowercase character, and 1 number.");
+        }
+
         // taken from https://stackoverflow.com/questions/11367727/how-can-i-sha512-a-string-in-c
         private string HashStringSHA512(string input)
         {
-            byte[] bytes = Encoding.UTF8.GetBytes(input);
             using (SHA512 hash = SHA512.Create())
             {
-                byte[] hashedInputBytes = hash.ComputeHash(bytes);
+                byte[] hashedInputBytes = hash.ComputeHash(Encoding.UTF8.GetBytes(input));
                 return BitConverter.ToString(hashedInputBytes).Replace("-", "");
             }
+        }
+
+        private bool IsPasswordValid(string password, string confirmPassword)
+        {
+            if (password == null)
+            {
+                return false;
+            }
+
+            if (!password.Equals(confirmPassword))
+            {
+                throw new UserSignupException("Passwords do not match.");
+            }
+
+            bool is8CharactersLong = password.Length >= 8;
+            bool passwordContainsOneUppercase = PasswordMeetsRequirement("(?=.*[A-Z])", password);
+            bool passwordContainsOneLowercase = PasswordMeetsRequirement("(?=.*[a-z])", password);
+            bool passwordContainsOneNumber = PasswordMeetsRequirement("(?=.*[0-9])", password);
+
+            return is8CharactersLong && passwordContainsOneUppercase
+                && passwordContainsOneLowercase && passwordContainsOneNumber;
+        }
+
+        private bool PasswordMeetsRequirement(string requirementExpression, string password)
+        {
+            Regex requirement = new Regex(requirementExpression);
+            return requirement.IsMatch(password);
         }
     }
 }
