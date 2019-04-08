@@ -44,9 +44,11 @@ namespace TrainerTracks.Web.Test.Controller.IT
             UserSignupDTO user = new UserSignupDTO
             {
                 EmailAddress = "test1@user.com",
+                ConfirmEmailAddress = "test1@user.com",
                 FirstName = "Test",
                 LastName = "User",
-                Password = "Password1234"
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
             };
             string jsonInString = JsonConvert.SerializeObject(user);
 

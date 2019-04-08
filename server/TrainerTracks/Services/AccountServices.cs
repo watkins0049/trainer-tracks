@@ -5,7 +5,7 @@ using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Web.Data.Model.Entity;
 using TrainerTracks.Data.Model.Entity.DBEntities;
 using TrainerTracks.Web.Data.Model.DTO.Account;
-using System.Net.Mail;
+using TrainerTracks.Web.Exceptions;
 
 namespace TrainerTracks.Web.Services
 {
@@ -46,7 +46,13 @@ namespace TrainerTracks.Web.Services
 
         public void SetupNewTrainer(UserSignupDTO user)
         {
-            Trainer trainer = Trainer.BuildTrainerFromUserSignup(user);
+            Trainer trainer = accountContext.Trainer.Find(user.EmailAddress); 
+            if (trainer != null)
+            {
+                throw new UserSignupException("An account with the given email already exists.");
+            }
+
+            trainer = Trainer.BuildTrainerFromUserSignup(user);
             accountContext.Trainer.Add(trainer);
 
             TrainerCredentials trainerCredentials = TrainerCredentials.BuildTrainerCredentialsFromUserSignup(user);

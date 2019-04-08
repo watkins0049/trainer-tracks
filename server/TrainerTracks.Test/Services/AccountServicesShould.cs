@@ -11,6 +11,7 @@ using Microsoft.Extensions.Options;
 using TrainerTracks.Web.Data.Context;
 using TrainerTracks.Data.Model.Entity.DBEntities;
 using TrainerTracks.Web.Data.Model.DTO.Account;
+using TrainerTracks.Web.Exceptions;
 
 namespace TrainerTracks.Test.Services
 {
@@ -115,7 +116,6 @@ namespace TrainerTracks.Test.Services
                 EmailAddress = "test@user.com",
                 Password = "Password1234"
             };
-            UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
 
             // WHEN a user is not correctly authenticated
             TrainerCredentials mockTrainerCredentials = new TrainerCredentials
@@ -130,7 +130,7 @@ namespace TrainerTracks.Test.Services
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.AuthorizeTrainer(user));
             // AND ensure the message reads "Username or password is incorrect."
-            Assert.Equal("Username or password is incorrect.", mockException.Message);
+            Assert.Equal("Username or password is incorrect.", ex.Message);
         }
 
         /// <summary>
@@ -157,8 +157,7 @@ namespace TrainerTracks.Test.Services
             // THEN ensure an UnauthorizedAccessException is thrown
             UnauthorizedAccessException ex = Assert.Throws<UnauthorizedAccessException>(() => accountServices.AuthorizeTrainer(user));
             // AND ensure the message reads "Username or password is incorrect."
-            UnauthorizedAccessException mockException = new UnauthorizedAccessException("Username or password is incorrect.");
-            Assert.Equal("Username or password is incorrect.", mockException.Message);
+            Assert.Equal("Username or password is incorrect.", ex.Message);
         }
 
         /// <summary>
@@ -176,9 +175,11 @@ namespace TrainerTracks.Test.Services
             UserSignupDTO user = new UserSignupDTO
             {
                 EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test@user.com",
                 FirstName = "Test",
                 LastName = "User",
-                Password = "Password1234"
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
             };
 
             // WHEN a trainer signs up for an account
@@ -211,9 +212,11 @@ namespace TrainerTracks.Test.Services
             UserSignupDTO user = new UserSignupDTO
             {
                 EmailAddress = "not an email",
+                ConfirmEmailAddress = "not an email",
                 FirstName = "Test",
                 LastName = "User",
-                Password = "Password1234"
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
             };
 
             // WHEN a user is attempting setup an account
@@ -242,9 +245,11 @@ namespace TrainerTracks.Test.Services
             UserSignupDTO user = new UserSignupDTO
             {
                 EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test@user.com",
                 FirstName = "Test",
                 LastName = "User",
-                Password = password
+                Password = password,
+                ConfirmPassword = password
             };
 
             // WHEN a user is attempting to setup an account
@@ -274,9 +279,11 @@ namespace TrainerTracks.Test.Services
             UserSignupDTO user = new UserSignupDTO
             {
                 EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test@user.com",
                 FirstName = firstName,
                 LastName = lastName,
-                Password = "Password1234"
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
             };
 
             // WHEN a user is attempting to setup an account
@@ -285,6 +292,91 @@ namespace TrainerTracks.Test.Services
             // AND ensure the exception reads "First name and last name are required."
             Assert.Equal("First name and last name are required.",
                 ex.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO with valid input
+        /// WHEN a user attempts to setup an account
+        /// AND an account with the given email address already exists
+        /// THEN throw a UserSignupException
+        /// AND ensure the message reads "An account with the given email already exists."
+        /// </summary>
+        [Fact]
+        public void ThrowUserSignupExceptionOnExistingUser()
+        {
+            // GIVEN a UserSignupDTO with valid input
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test@user.com",
+                FirstName = "First",
+                LastName = "Last",
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
+            };
+
+            // WHEN a user attempts to setup an account
+            // AND an account with the given e-mail address already exists
+            accountContextMock.Setup(a => a.Trainer.Find(It.IsAny<string>())).Returns(new Trainer());
+
+            // THEN throw a UserSignupException
+            UserSignupException ex = Assert.Throws<UserSignupException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the message reads "An account with the given email already exists."
+            Assert.Equal("An account with the given email already exists.", ex.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO with non-matching email addresses
+        /// WHEN a user attempts to setup an account with non-matching email addresses
+        /// THEN throw a UserSignupException
+        /// AND ensure the message reads "Email addresses do not match."
+        /// </summary>
+        [Fact]
+        public void ThrowUserSignupExceptionOnNonMatchingEmails()
+        {
+            // GIVEN a UserSignupDTO with non-matching email addresses
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test1@user.com",
+                FirstName = "Test",
+                LastName = "User",
+                Password = "Password1234",
+                ConfirmPassword = "Password1234"
+            };
+
+            // WHEN a user attempts to setup an account with non-matching email addresses
+            // THEN throw a UserSignupException
+            UserSignupException ex = Assert.Throws<UserSignupException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the message reads "Email addresses do not match."
+            Assert.Equal("Email addresses do not match.", ex.Message);
+        }
+
+        /// <summary>
+        /// GIVEN a UserSignupDTO with non-matching passwords
+        /// WHEN a user attempts to setup an account with non-matching passwords
+        /// THEN throw a UserSignupException
+        /// AND ensure the message reads "Passwords do not match."
+        /// </summary>
+        [Fact]
+        public void ThrowUserSignupExceptionOnNonMatchingPasswords()
+        {
+            // GIVEN a UserSignupDTO with non-matching passwords
+            UserSignupDTO user = new UserSignupDTO
+            {
+                EmailAddress = "test@user.com",
+                ConfirmEmailAddress = "test@user.com",
+                FirstName = "Test",
+                LastName = "User",
+                Password = "Password1234",
+                ConfirmPassword = "Password12345"
+            };
+
+            // WHEN a user attempts to setup an account with non-matching passwords
+            // THEN throw a UserSignupException
+            UserSignupException ex = Assert.Throws<UserSignupException>(() => accountServices.SetupNewTrainer(user));
+            // AND ensure the message reads "Passwords do not match."
+            Assert.Equal("Passwords do not match.", ex.Message);
         }
     }
 }

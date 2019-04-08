@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using TrainerTracks.Web.Data.Model.DTO.Account;
+using TrainerTracks.Web.Exceptions;
 
 namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
@@ -28,14 +29,14 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
                 EmailAddress = user.EmailAddress
             };
             trainerCredentials.Salt = BCrypt.Net.BCrypt.GenerateSalt(14);
-            trainerCredentials.Hash = trainerCredentials.HashPassword(user.Password);
+            trainerCredentials.Hash = trainerCredentials.HashPassword(user.Password, user.ConfirmPassword);
 
             return trainerCredentials;
         }
 
-        private string HashPassword(string password)
+        private string HashPassword(string password, string confirmPassword)
         {
-            if (IsPasswordValid(password))
+            if (IsPasswordValid(password, confirmPassword))
             {
                 string sha512 = HashStringSHA512(password);
                 return BCrypt.Net.BCrypt.HashPassword(sha512, Salt);
@@ -53,11 +54,16 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             }
         }
 
-        private bool IsPasswordValid(string password)
+        private bool IsPasswordValid(string password, string confirmPassword)
         {
             if (password == null)
             {
                 return false;
+            }
+
+            if (!password.Equals(confirmPassword))
+            {
+                throw new UserSignupException("Passwords do not match.");
             }
 
             bool is8CharactersLong = password.Length >= 8;

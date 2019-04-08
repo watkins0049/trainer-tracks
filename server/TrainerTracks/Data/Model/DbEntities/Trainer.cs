@@ -6,6 +6,7 @@ using System.Security.Claims;
 using TrainerTracks.Data.Enums;
 using TrainerTracks.Web.Data.Model.DTO.Account;
 using TrainerTracks.Web.Data.Model.Entity;
+using TrainerTracks.Web.Exceptions;
 
 namespace TrainerTracks.Data.Model.Entity.DBEntities
 {
@@ -39,6 +40,11 @@ namespace TrainerTracks.Data.Model.Entity.DBEntities
             if (string.IsNullOrWhiteSpace(user.LastName) || string.IsNullOrWhiteSpace(user.FirstName))
             {
                 throw new ArgumentException("First name and last name are required.");
+            }
+
+            if (!user.EmailAddress.Equals(user.ConfirmEmailAddress))
+            {
+                throw new UserSignupException("Email addresses do not match.");
             }
 
             return new Trainer
