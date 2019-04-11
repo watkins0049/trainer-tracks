@@ -13,6 +13,7 @@ export class ClientFormsComponent implements OnInit {
 
     public forms = new Array<Forms>();
     private clientId: string;
+    public isLoading = false;
 
     constructor(
         private httpClient: HttpClient,

@@ -11,6 +11,7 @@ import { HttpClient } from 'app/utilities/http/http.client';
 export class FormsComponent implements OnInit {
 
     public forms = new Array<Forms>();
+    public isLoading = false;
 
     constructor(private httpClient: HttpClient) {
 
